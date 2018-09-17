@@ -1,6 +1,15 @@
+// libraries
 import Vue from "vue";
-import App from "./App.vue";
+
+// polyfills
+import "@babel/polyfill";
+
+// plugins
+import "./plugins/vuetify";
 import store from "./store";
+
+// components
+import App from "./App.vue";
 
 Vue.config.productionTip = false;
 
