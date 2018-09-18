@@ -6,7 +6,7 @@ import "@babel/polyfill";
 
 // plugins
 import "./plugins/vuetify";
-import store from "./store";
+import store from "./plugins/vuex";
 
 // components
 import App from "./App.vue";
