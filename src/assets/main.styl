@@ -2,3 +2,16 @@ $color-pack = false
 
 @import '~material-design-icons-iconfont/dist/material-design-icons.css'
 @import '~vuetify/src/stylus/main'
+
+.application--wrap
+  min-height: 0
+
+.v-stepper:not(.v-stepper--vertical) .v-stepper__wrapper
+  overflow: visible
+
+.text-limit
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+  transition: .3s cubic-bezier(.25, .8, .5, 1)
+  width: 100%

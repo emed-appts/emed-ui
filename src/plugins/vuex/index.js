@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
-import * as actions from "./actions";
 import * as getters from "./getters";
+import actions from "./actions";
 import mutations from "./mutations";
 import plugins from "./plugins";
 
@@ -11,8 +11,8 @@ Vue.use(Vuex);
 const state = {
   currentStep: 1,
   editMode: false,
-  appointmentInProcess: {},
-  calendar: {
+  calendarInProcess: null,
+  calendars: {
     /*
     id: {
       id,
@@ -23,8 +23,9 @@ const state = {
     }
     */
   },
+  appointmentInProcess: "", // appointment == date
   appointments: [], // array of dates
-  patients: [
+  patients: {
     /*
     insuranceNumber: {
       firstName,
@@ -37,7 +38,7 @@ const state = {
       slots // array of dates
     }
     */
-  ]
+  }
 };
 
 export default new Vuex.Store({
