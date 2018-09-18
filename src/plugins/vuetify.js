@@ -4,8 +4,6 @@ import Vuetify from "vuetify";
 // Helpers
 import colors from "vuetify/es5/util/colors";
 
-import "vuetify/dist/vuetify.min.css";
-
 Vue.use(Vuetify, {
   theme: {
     primary: colors.orange.base, // #FF9800
