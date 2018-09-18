@@ -1,9 +1,9 @@
 module.exports = {
-  lintOnSave: false,
   pages: {
     "emed-appts": {
       entry: "src/main.js",
-      template: "public/index.html"
+      template: "public/index.html",
+      filename: "index.html"
     }
   }
 };

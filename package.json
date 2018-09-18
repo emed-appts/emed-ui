@@ -1,6 +1,10 @@
 {
   "name": "emed-ui",
   "version": "0.1.0",
+  "author": {
+    "name": "David Schneiderbauer",
+    "email": "david.schneiderbauer@dschneiderbauer.me"
+  },
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
