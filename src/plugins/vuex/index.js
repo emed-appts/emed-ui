@@ -23,8 +23,15 @@ const state = {
     }
     */
   },
-  appointmentInProcess: "", // appointment == date
-  appointments: [], // array of dates
+  appointmentInProcess: "", // appointment = date
+  appointments: {
+    /*
+    unix_timestamp: {
+      time,
+      calendar
+    }
+    */
+  },
   patients: {
     /*
     insuranceNumber: {

@@ -10,7 +10,9 @@
               ripple
               @click="selectCalendar(calendar)">
               <v-list-tile-content>
-                <v-list-tile-title>{{ calendar.title }} <small class="ml-2">{{ calendar.subtitle }}</small></v-list-tile-title>
+                <v-list-tile-title>{{ calendar.title }}&nbsp;
+                  <small class="title-sub" v-if="calendar.subtitle">{{ calendar.subtitle }}</small>
+                </v-list-tile-title>
                 <v-list-tile-sub-title
                   v-if="calendar.description"
                   class="text--primary"
@@ -26,7 +28,7 @@
     </v-card>
     <v-btn
       class="ml-0 mt-4"
-      @click="unsetCalendar">Zurück</v-btn>
+      @click="goPreviousStep">Zurück</v-btn>
   </div>
 </template>
 
@@ -53,10 +55,6 @@ export default {
       goPreviousStep: GO_PREV_STEP,
       setCalendar: SET_CALENDAR
     }),
-    unsetCalendar() {
-      this.setCalendar(null);
-      this.goPreviousStep();
-    },
     selectCalendar(calendar) {
       this.setCalendar(calendar);
       this.goNextStep();
@@ -69,7 +67,19 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
+.v-list--three-line >>> .v-list__tile
+  min-height: 88px
+  height: auto
+  padding: 8px 16px
+
+.v-list__tile__title
+  white-space: normal
+  height: auto
+
+.v-list__tile__title .title-sub
+  white-space: nowrap
+
 .v-list__tile__sub-title p
   margin: 0
 </style>

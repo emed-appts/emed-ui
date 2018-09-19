@@ -25,7 +25,7 @@ export default {
 };
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 .loading__wrapper
   position: relative
 

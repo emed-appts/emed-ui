@@ -1,3 +1,5 @@
+var webpack = require("webpack");
+
 module.exports = {
   pages: {
     "emed-appts": {
@@ -5,5 +7,14 @@ module.exports = {
       template: "public/index.html",
       filename: "index.html"
     }
+  },
+  configureWebpack: {
+    devtool: "source-map",
+    plugins: [
+      new webpack.ContextReplacementPlugin(
+        /moment[\\/]locale$/,
+        /^\.\/(de-at)$/
+      )
+    ]
   }
 };

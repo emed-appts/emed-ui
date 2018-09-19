@@ -4,7 +4,8 @@ import {
   GO_NEXT_STEP,
   GO_PREV_STEP,
   SET_CALENDAR,
-  RECEIVE_CALENDARS
+  RECEIVE_CALENDARS,
+  SET_APPOINTMENTS
 } from "./mutation-types";
 
 export default {
@@ -20,11 +21,16 @@ export default {
   [SET_CALENDAR](state, calendar) {
     state.calendarInProcess = calendar;
   },
-  [RECEIVE_CALENDARS](state, data) {
-    data.items.forEach(calendar => {
+  [RECEIVE_CALENDARS](state, calendars) {
+    for (let calendar of calendars) {
       if (!state.calendars[calendar.id]) {
         createCalendar(state, calendar);
       }
+    }
+  },
+  [SET_APPOINTMENTS](state, slots) {
+    slots.forEach(slot => {
+      Vue.set(state.appointments, slot.time.getTime(), slot);
     });
   }
 };

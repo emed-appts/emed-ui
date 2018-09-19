@@ -17,10 +17,10 @@
                 class="stepper__label__sublabel text-limit">{{ calendar.title }}</small>
             </transition>
           </v-stepper-step>
+          <v-divider />
           <v-stepper-step
-            step="3">
-            Test
-          </v-stepper-step>
+            :complete="currentStep > 3"
+            step="3">Termin auswählen</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -30,7 +30,7 @@
             <as-calendar-step />
           </v-stepper-content>
           <v-stepper-content step="3">
-            <v-btn @click="goPreviousStep">ZURÜCK</v-btn>
+            <as-appointment-step />
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -43,13 +43,15 @@ import { mapState, mapMutations } from "vuex";
 
 import AsInformationStep from "./components/InformationStep";
 import AsCalendarStep from "./components/CalendarStep";
+import AsAppointmentStep from "./components/AppointmentStep";
 import { GO_PREV_STEP } from "./plugins/vuex/mutation-types";
 
 export default {
   name: "eMedAppts",
   components: {
     AsInformationStep,
-    AsCalendarStep
+    AsCalendarStep,
+    AsAppointmentStep
   },
   computed: mapState({
     currentStep: state => state.currentStep,
@@ -65,8 +67,11 @@ export default {
 .stepper__label__sublabel
   display: block
   max-width: 150px
+  white-space: nowrap
+  text-overflow: ellipsis
+  overflow: hidden
 
-@media (max-width: 991px)
+@media (max-width: 959px)
   .stepper__label__sublabel
     max-width: 95px
 

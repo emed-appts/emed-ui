@@ -1,7 +1,4 @@
-$color-pack = false
-
 @import '~material-design-icons-iconfont/dist/material-design-icons.css'
-@import '~vuetify/src/stylus/main'
 
 .application--wrap
   min-height: 0
@@ -9,9 +6,12 @@ $color-pack = false
 .v-stepper:not(.v-stepper--vertical) .v-stepper__wrapper
   overflow: visible
 
-.text-limit
+.v-stepper__content .container.grid-list-xl
+  margin: -16px
+  width: auto
+  max-width: none
+
+.text-hide
+  text-indent: 100%
   white-space: nowrap
   overflow: hidden
-  text-overflow: ellipsis
-  transition: .3s cubic-bezier(.25, .8, .5, 1)
-  width: 100%
