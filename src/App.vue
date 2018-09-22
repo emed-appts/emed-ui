@@ -62,13 +62,12 @@
 </template>
 
 <script>
-import { mapGetters, mapState, mapMutations } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 import AsInformationStep from "./components/InformationStep";
 import AsCalendarStep from "./components/CalendarStep";
 import AsAppointmentStep from "./components/AppointmentStep";
 import AsPatientStep from "./components/PatientStep";
-import { GO_PREV_STEP } from "./plugins/vuex/mutation-types";
 
 export default {
   name: "eMedAppts",
@@ -84,10 +83,7 @@ export default {
       calendar: state => state.calendarInProcess
     }),
     ...mapGetters(["appointments"])
-  },
-  methods: mapMutations({
-    goPreviousStep: GO_PREV_STEP
-  })
+  }
 };
 </script>
 
