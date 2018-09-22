@@ -11,7 +11,7 @@
               @click="selectCalendar(calendar)">
               <v-list-tile-content>
                 <v-list-tile-title>{{ calendar.title }}&nbsp;
-                  <small class="title-sub" v-if="calendar.subtitle">{{ calendar.subtitle }}</small>
+                  <small class="d-inline-block" v-if="calendar.subtitle">{{ calendar.subtitle }}</small>
                 </v-list-tile-title>
                 <v-list-tile-sub-title
                   v-if="calendar.description"
@@ -76,9 +76,6 @@ export default {
 .v-list__tile__title
   white-space: normal
   height: auto
-
-.v-list__tile__title .title-sub
-  white-space: nowrap
 
 .v-list__tile__sub-title p
   margin: 0
