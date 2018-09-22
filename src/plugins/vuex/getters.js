@@ -7,3 +7,23 @@ export const calendars = state => {
   }
   return [];
 };
+
+// get appointments as array
+export const appointments = state => {
+  const indexes = Object.keys(state.appointments);
+  // map to array
+  if (indexes.length > 0) {
+    return indexes.map(index => state.appointments[index]);
+  }
+  return [];
+};
+
+// get patients as array
+export const patients = state => {
+  const indexes = Object.keys(state.patients);
+  // map to array
+  if (indexes.length > 0) {
+    return indexes.map(index => state.patients[index]);
+  }
+  return [];
+};

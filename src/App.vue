@@ -21,6 +21,23 @@
           <v-stepper-step
             :complete="currentStep > 3"
             step="3">Termin auswählen</v-stepper-step>
+          <v-divider></v-divider>
+          <template v-if="appointments.length === 0">
+            <v-stepper-step
+              :complete="currentStep > 4"
+              step="4">Patientendaten</v-stepper-step>
+            <v-divider />
+          </template>
+          <template v-for="(appointment, index) in appointments">
+            <v-stepper-step
+              :key="index"
+              :complete="currentStep > 4 + index"
+              :step="4 + index">
+              Patientendaten
+              <small>{{ appointment.time | moment('DD.MM. HH:mm') }}</small>
+            </v-stepper-step>
+            <v-divider :key="`divider-${appointment.time.getTime()}`" />
+          </template>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -32,6 +49,12 @@
           <v-stepper-content step="3">
             <as-appointment-step />
           </v-stepper-content>
+          <v-stepper-content
+            v-for="(appointment, index) in appointments"
+            :key="`content-${index}`"
+            :step="4 + index">
+            <as-patient-step :appointment="appointment" />
+          </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
     </v-content>
@@ -39,11 +62,12 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapGetters, mapState, mapMutations } from "vuex";
 
 import AsInformationStep from "./components/InformationStep";
 import AsCalendarStep from "./components/CalendarStep";
 import AsAppointmentStep from "./components/AppointmentStep";
+import AsPatientStep from "./components/PatientStep";
 import { GO_PREV_STEP } from "./plugins/vuex/mutation-types";
 
 export default {
@@ -51,12 +75,16 @@ export default {
   components: {
     AsInformationStep,
     AsCalendarStep,
-    AsAppointmentStep
+    AsAppointmentStep,
+    AsPatientStep
   },
-  computed: mapState({
-    currentStep: state => state.currentStep,
-    calendar: state => state.calendarInProcess
-  }),
+  computed: {
+    ...mapState({
+      currentStep: state => state.currentStep,
+      calendar: state => state.calendarInProcess
+    }),
+    ...mapGetters(["appointments"])
+  },
   methods: mapMutations({
     goPreviousStep: GO_PREV_STEP
   })

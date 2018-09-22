@@ -110,7 +110,9 @@ export default {
     },
     goToNextStep() {
       this.setAppointments(this.appointments);
-      this.goNextStep();
+      // IMPORTANT: we've to wait for $nextTick
+      // otherwise dynamically rendered steps are not showing up
+      this.$nextTick(this.goNextStep);
     },
     // loads appointments from given date to end of month
     loadAppointments(fromDate) {
