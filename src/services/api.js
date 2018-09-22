@@ -4,8 +4,8 @@ import { setupCache } from "axios-cache-adapter";
 import utils from "./utils";
 
 const cache = setupCache({
-  // max age of cached entries: 15 minutes
-  maxAge: 15 * 60 * 1000,
+  // max age of cached entries
+  maxAge: process.env.VUE_APP_CACHE_MAX_AGE * 1000,
   // key function to also include query parameters
   // Copyright https://github.com/axios/axios
   key: req => {
