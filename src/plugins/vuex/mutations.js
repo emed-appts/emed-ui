@@ -25,7 +25,7 @@ export default {
   [RECEIVE_CALENDARS](state, calendars) {
     for (let calendar of calendars) {
       if (!state.calendars[calendar.id]) {
-        createCalendar(state, calendar);
+        Vue.set(state.calendars, calendar.id, calendar);
       }
     }
   },
@@ -40,7 +40,3 @@ export default {
     }
   }
 };
-
-function createCalendar(state, calendar) {
-  Vue.set(state.calendars, calendar.id, calendar);
-}
