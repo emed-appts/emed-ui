@@ -23,8 +23,8 @@ const state = {
     }
     */
   },
-  appointmentInProcess: "", // appointment = date
-  appointments: {
+  slotInProcess: "", // appointment = date
+  slots: {
     /*
     unix_timestamp: {
       time,

@@ -1,12 +1,12 @@
 import utils from "@/utils";
 
-export default class Appointment {
+export default class Slot {
   constructor(time, calendar) {
     this.time = time;
     this.calendar = calendar;
   }
 
-  compare(appointment) {
-    return utils.dateCompareFn(this.time, appointment.time);
+  compare(slot) {
+    return utils.dateCompareFn(this.time, slot.time);
   }
 }

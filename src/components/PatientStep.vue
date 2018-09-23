@@ -2,7 +2,7 @@
   <div>
     <h2 class="headline mb-4">
       Wir benötigen noch ein paar Angaben
-      <small class="d-inline-block mt-2">für den Termin am {{ appointment.time | moment('DD.MM.YYYY [um] HH:mm') }}</small>
+      <small class="d-inline-block mt-2">für den Termin am {{ slot.time | moment('DD.MM.YYYY [um] HH:mm') }}</small>
     </h2>
     <v-form
       ref="form"
@@ -128,7 +128,7 @@ import { parse as parsePhone } from "libphonenumber-js";
 
 import { mapGetters, mapMutations } from "vuex";
 import AsDataPrivacyDialog from "./utils/DataPrivacyDialog";
-import Appointment from "@/models/appointment";
+import Slot from "@/models/slot";
 import Patient from "@/models/patient";
 import {
   GO_PREV_STEP,
@@ -141,8 +141,8 @@ export default {
     AsDataPrivacyDialog
   },
   props: {
-    appointment: {
-      type: Appointment,
+    slot: {
+      type: Slot,
       required: true
     }
   },
@@ -220,7 +220,7 @@ export default {
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
     goToNextStep() {
-      this.patient.slots = [this.appointment.time];
+      this.patient.slots = [this.slot.time];
       this.addPatient(this.patient);
       this.goNextStep();
     }

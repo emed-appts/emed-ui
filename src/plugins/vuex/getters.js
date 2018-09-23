@@ -8,12 +8,12 @@ export const calendars = state => {
   return [];
 };
 
-// get appointments as array
-export const appointments = state => {
-  const indexes = Object.keys(state.appointments);
+// get slots as array
+export const slots = state => {
+  const indexes = Object.keys(state.slots);
   // map to array
   if (indexes.length > 0) {
-    return indexes.map(index => state.appointments[index]);
+    return indexes.map(index => state.slots[index]);
   }
   return [];
 };

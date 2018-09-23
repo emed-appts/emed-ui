@@ -15,7 +15,7 @@
           md6>
           <as-date-picker
             :events="events"
-            :hightlight-events="appointments"
+            :hightlight-events="slots"
             :show-loading-spinner="loading"
             :picker-view.sync="pickerView"
             @input="selectEvents" />
@@ -23,10 +23,10 @@
         <v-flex
           xs12
           md6>
-          <as-appointment-picker
-            :value="appointments"
-            :appointments="pickableAppointments"
-            @input="selectAppointments" />
+          <as-slot-picker
+            :value="slots"
+            :slots="pickableSlots"
+            @input="selectSlots" />
         </v-flex>
       </v-layout>
     </v-container>
@@ -34,7 +34,7 @@
       class="ml-0 mt-4"
       @click="goToPreviousStep">Zurück</v-btn>
     <v-btn
-      :disabled="appointments.length === 0"
+      :disabled="slots.length === 0"
       class="mt-4"
       color="primary"
       @click="goToNextStep">Weiter</v-btn>
@@ -46,44 +46,41 @@ import _ from "lodash";
 import { mapActions, mapMutations, mapState } from "vuex";
 
 import AsDatePicker from "./utils/DatePicker";
-import AsAppointmentPicker from "./utils/AppointmentPicker";
+import AsSlotPicker from "./utils/SlotPicker";
 import { GET_CALENDAR } from "@/plugins/vuex/action-types";
 import {
   GO_PREV_STEP,
   GO_NEXT_STEP,
   SET_CALENDAR,
-  SET_APPOINTMENTS
+  SET_SLOTS
 } from "@/plugins/vuex/mutation-types";
 
 export default {
   components: {
     AsDatePicker,
-    AsAppointmentPicker
+    AsSlotPicker
   },
   data: () => ({
     loading: false,
     pickerView: null,
-    // selected appointments
-    appointments: [],
-    // available appointments from that day
-    availableDailyAppointments: [],
-    // all available appointments from that month
-    availableMonthlyAppointments: []
+    // selected slots
+    slots: [],
+    // available slots from that day
+    availableDailySlots: [],
+    // all available slots from that month
+    availableMonthlySlots: []
   }),
   computed: {
     ...mapState({
       calendar: state => state.calendarInProcess
     }),
-    pickableAppointments() {
-      return _.uniqBy(
-        this.availableDailyAppointments.concat(this.appointments),
-        appointment => appointment.time.getTime()
+    pickableSlots() {
+      return _.uniqBy(this.availableDailySlots.concat(this.slots), slot =>
+        slot.time.getTime()
       );
     },
     events() {
-      return this.availableMonthlyAppointments.map(appointment =>
-        appointment.time.toISOString()
-      );
+      return this.availableMonthlySlots.map(slot => slot.time.toISOString());
     }
   },
   methods: {
@@ -94,51 +91,51 @@ export default {
       goPreviousStep: GO_PREV_STEP,
       goNextStep: GO_NEXT_STEP,
       setCalendar: SET_CALENDAR,
-      setAppointments: SET_APPOINTMENTS
+      setSlots: SET_SLOTS
     }),
     selectEvents(events) {
-      this.availableDailyAppointments = this.availableMonthlyAppointments.filter(
-        appointment => events.includes(appointment.time.toISOString())
+      this.availableDailySlots = this.availableMonthlySlots.filter(slot =>
+        events.includes(slot.time.toISOString())
       );
     },
-    selectAppointments(appointments) {
-      this.appointments = appointments;
+    selectSlots(slots) {
+      this.slots = slots;
     },
     goToPreviousStep() {
       this.setCalendar(null);
       this.goPreviousStep();
     },
     goToNextStep() {
-      this.setAppointments(this.appointments);
+      this.setSlots(this.slots);
       // IMPORTANT: we've to wait for $nextTick
       // otherwise dynamically rendered steps are not showing up
       this.$nextTick(this.goNextStep);
     },
-    // loads appointments from given date to end of month
-    loadAppointments(fromDate) {
+    // loads slots from given date to end of month
+    loadSlots(fromDate) {
       this.loading = true;
       this.loadCalendar({
         calendar: this.calendar.id,
         filter: generateAPIFilter(fromDate)
       }).then(calendar => {
         this.loading = false;
-        this.availableMonthlyAppointments = calendar.slots;
+        this.availableMonthlySlots = calendar.slots;
       });
     }
   },
   watch: {
     calendar: function(cal) {
       if (!cal) {
-        this.availableDailyAppointments = [];
+        this.availableDailySlots = [];
         this.pickerView = new Date();
         return;
       }
 
-      this.loadAppointments(new Date());
+      this.loadSlots(new Date());
     },
     pickerView: function(val) {
       if (!this.calendar) return;
-      this.loadAppointments(_.max([new Date(), val]));
+      this.loadSlots(_.max([new Date(), val]));
     }
   }
 };

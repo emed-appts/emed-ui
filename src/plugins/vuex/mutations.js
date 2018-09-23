@@ -5,7 +5,7 @@ import {
   GO_PREV_STEP,
   SET_CALENDAR,
   RECEIVE_CALENDARS,
-  SET_APPOINTMENTS,
+  SET_SLOTS,
   ADD_PATIENT
 } from "./mutation-types";
 
@@ -29,9 +29,9 @@ export default {
       }
     }
   },
-  [SET_APPOINTMENTS](state, slots) {
+  [SET_SLOTS](state, slots) {
     slots.forEach(slot => {
-      Vue.set(state.appointments, slot.time.getTime(), slot);
+      Vue.set(state.slots, slot.time.getTime(), slot);
     });
   },
   [ADD_PATIENT](state, patient) {

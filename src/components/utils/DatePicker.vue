@@ -70,7 +70,7 @@ export default {
     pickerView: Date
   },
   data: () => ({
-    // used to update appointments on e.g. switch between months
+    // used to update slots on e.g. switch between months
     pickerDate: null,
     // selected date from datepicker
     date: null,
@@ -123,7 +123,7 @@ export default {
       // shows loader to visualize changes in datepicker
       this.fakeLoading = true;
       setTimeout(() => {
-        // refilter available appointments from that date
+        // refilter available slots from that date
         this.selectEventDay(this.date);
         this.fakeLoading = false;
       }, 250);

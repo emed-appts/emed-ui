@@ -1,5 +1,5 @@
-import Appointment from "@/models/appointment";
 import Calendar from "@/models/calendar";
+import Slot from "@/models/slot";
 import CalendarService from "@/services/calendar-service";
 import utils from "@/utils";
 import { GET_ALL_CALENDARS, GET_CALENDAR } from "./action-types";
@@ -37,7 +37,7 @@ function mapCalendar(data) {
 
   const slots = [];
   for (let slot of data.slots) {
-    slots.push(new Appointment(utils.parseISOLocal(slot), calendar));
+    slots.push(new Slot(utils.parseISOLocal(slot), calendar));
   }
   calendar.slots = slots;
 
