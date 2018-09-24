@@ -137,14 +137,15 @@ export default {
   },
   watch: {
     pickerDate: _.debounce(function(val) {
+      if (val.indexOf("-") == -1) return;
       this.$emit("update:pickerView", utils.parseISOLocal(val));
     }, 500),
     pickerView: function(val) {
       this.date = null;
       this.pickerDate = `${val.getFullYear()}-${(
-        "0" +
+        "" +
         (val.getMonth() + 1)
-      ).slice(-2)}`;
+      ).padStart(2, "0")}`;
     }
   }
 };

@@ -9,7 +9,14 @@ function parseISOLocal(s) {
   // for (let i = b.length; i < 6; i++) {
   //   b[i] = "0";
   // }
-  return new Date(b[0], b[1] - 1, b[2] || 1, b[3] || 0, b[4] || 0, b[5] || 0);
+  return new Date(
+    b[0],
+    b[1] - 1 || 0,
+    b[2] || 1,
+    b[3] || 0,
+    b[4] || 0,
+    b[5] || 0
+  );
 }
 
 /**
