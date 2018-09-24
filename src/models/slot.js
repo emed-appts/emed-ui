@@ -1,5 +1,3 @@
-import utils from "@/utils";
-
 export default class Slot {
   constructor(time, calendar) {
     this.time = time;
@@ -7,6 +5,8 @@ export default class Slot {
   }
 
   compare(slot) {
-    return utils.dateCompareFn(this.time, slot.time);
+    if (this.time > slot.time) return 1;
+    if (this.time < slot.time) return -1;
+    return 0;
   }
 }
