@@ -151,7 +151,8 @@ function generateAPIFilter(fromDate) {
 
   return {
     from: fromDate,
-    to: maxDate
+    to: maxDate,
+    maxCount: process.env.VUE_APP_API_SLOT_MAX_COUNT
   };
 }
 </script>
