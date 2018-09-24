@@ -18,4 +18,8 @@ export default class Patient {
     this.phoneNumber = phoneNumber;
     this.acceptsPrivacyPolicy = acceptsPrivacyPolicy;
   }
+
+  equals(patient) {
+    return this.insuranceNumber === patient.insuranceNumber;
+  }
 }

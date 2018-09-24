@@ -7,7 +7,7 @@ import Vue from "vue";
 // plugins
 import "./plugins/vuetify";
 import "./plugins/vuemoment";
-import store from "./plugins/vuex";
+import { store } from "./plugins/vuex";
 
 // components
 import App from "./App.vue";

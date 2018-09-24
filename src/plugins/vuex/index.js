@@ -9,6 +9,7 @@ import plugins from "./plugins";
 Vue.use(Vuex);
 
 const state = {
+  previousStep: 0,
   currentStep: 1,
   editMode: false,
   calendarInProcess: null,
@@ -23,7 +24,6 @@ const state = {
     }
     */
   },
-  slotInProcess: "", // appointment = date
   slots: {
     /*
     unix_timestamp: {
@@ -48,7 +48,7 @@ const state = {
   }
 };
 
-export default new Vuex.Store({
+export const store = new Vuex.Store({
   state,
   getters,
   actions,

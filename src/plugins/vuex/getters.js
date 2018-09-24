@@ -13,7 +13,9 @@ export const slots = state => {
   const indexes = Object.keys(state.slots);
   // map to array
   if (indexes.length > 0) {
-    return indexes.map(index => state.slots[index]);
+    return indexes
+      .map(index => state.slots[index])
+      .sort((a, b) => a.compare(b));
   }
   return [];
 };
@@ -23,7 +25,9 @@ export const patients = state => {
   const indexes = Object.keys(state.patients);
   // map to array
   if (indexes.length > 0) {
-    return indexes.map(index => state.patients[index]);
+    return indexes
+      .map(index => state.patients[index])
+      .sort((a, b) => a.slots[0].compare(b.slots[0]));
   }
   return [];
 };

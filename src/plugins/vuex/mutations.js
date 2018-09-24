@@ -6,18 +6,34 @@ import {
   SET_CALENDAR,
   RECEIVE_CALENDARS,
   SET_SLOTS,
-  ADD_PATIENT
+  REMOVE_SLOT,
+  ADD_PATIENT,
+  REMOVE_PATIENT,
+  SET_EDITMODE,
+  RESET
 } from "./mutation-types";
 
 export default {
+  [RESET](state) {
+    state.previousStep = 0;
+    state.currentStep = 1;
+    state.editMode = false;
+    state.calendarInProcess = null;
+    for (let slot in state.slots) {
+      Vue.delete(state.slots, slot);
+    }
+    for (let patient in state.patients) {
+      Vue.delete(state.patients, patient);
+    }
+  },
   [GO_STEP](state, step) {
-    state.currentStep = step;
+    goStep(state, step);
   },
   [GO_NEXT_STEP](state) {
-    state.currentStep++;
+    goStep(state, state.currentStep + 1);
   },
   [GO_PREV_STEP](state) {
-    state.currentStep--;
+    state.currentStep = state.previousStep;
   },
   [SET_CALENDAR](state, calendar) {
     state.calendarInProcess = calendar;
@@ -35,9 +51,39 @@ export default {
       Vue.set(state.slots, slot.time.getTime(), slot);
     }
   },
+  [REMOVE_SLOT](state, slot) {
+    Vue.delete(state.slots, slot.time.getTime());
+
+    let patient = undefined;
+    for (let patIndex in state.patients) {
+      if (state.patients[patIndex].slots[0].equals(slot)) {
+        patient = state.patients[patIndex];
+        break;
+      }
+    }
+
+    if (patient) {
+      removePatient(state, patient);
+    }
+  },
   [ADD_PATIENT](state, patient) {
     if (!state.patients[patient.insuranceNumber]) {
       Vue.set(state.patients, patient.insuranceNumber, patient);
     }
+  },
+  [REMOVE_PATIENT](state, patient) {
+    removePatient(state, patient);
+  },
+  [SET_EDITMODE](state, editMode) {
+    state.editMode = editMode;
   }
 };
+
+function goStep(state, step) {
+  state.previousStep = state.currentStep;
+  state.currentStep = step;
+}
+
+function removePatient(state, patient) {
+  Vue.delete(state.patients, patient.insuranceNumber);
+}

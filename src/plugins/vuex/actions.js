@@ -2,7 +2,11 @@ import Calendar from "@/models/calendar";
 import Slot from "@/models/slot";
 import CalendarService from "@/services/calendar-service";
 import utils from "@/utils";
-import { GET_ALL_CALENDARS, GET_CALENDAR } from "./action-types";
+import {
+  GET_ALL_CALENDARS,
+  GET_CALENDAR,
+  CREATE_APPOINTMENT
+} from "./action-types";
 import { RECEIVE_CALENDARS } from "./mutation-types";
 
 export default {
@@ -21,6 +25,9 @@ export default {
     return CalendarService.getCalendar(calendar, filter).then(response => {
       return mapCalendar(response.data);
     });
+  },
+  [CREATE_APPOINTMENT](_, { slot }) {
+    return CalendarService.createReservation(slot);
   }
 };
 

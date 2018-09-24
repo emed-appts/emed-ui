@@ -38,6 +38,7 @@
             </v-stepper-step>
             <v-divider :key="`divider-${slot.time.getTime()}`" />
           </template>
+          <v-stepper-step :step="4 + Math.max(slots.length, 1)">Bestätigen</v-stepper-step>
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
@@ -54,7 +55,10 @@
             :key="`content-${index}`"
             :step="4 + index">
             <!-- IMPORTANT: v-if needed for autofocus in form -->
-            <as-patient-step v-if="currentStep === 4 + index" :desired-slot="slot" />
+            <as-patient-step v-if="currentStep >= 4 + index" :desired-slot="slot" />
+          </v-stepper-content>
+          <v-stepper-content :step="4 + slots.length">
+            <as-confirmation-step />
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -69,6 +73,7 @@ import AsInformationStep from "./components/InformationStep";
 import AsCalendarStep from "./components/CalendarStep";
 import AsSlotStep from "./components/SlotStep";
 import AsPatientStep from "./components/PatientStep";
+import AsConfirmationStep from "./components/ConfirmationStep";
 
 export default {
   name: "eMedAppts",
@@ -76,7 +81,8 @@ export default {
     AsInformationStep,
     AsCalendarStep,
     AsSlotStep,
-    AsPatientStep
+    AsPatientStep,
+    AsConfirmationStep
   },
   computed: {
     ...mapState({

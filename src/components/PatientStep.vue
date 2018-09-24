@@ -53,7 +53,7 @@
                     full-width>
                     <v-text-field
                       slot="activator"
-                      v-model="patient.birthday"
+                      v-model="birthday"
                       :rules="birthdayRules"
                       :readonly="$vuetify.breakpoint.smAndDown"
                       label="Geburtsdatum"
@@ -61,12 +61,12 @@
                       append-icon="event"
                       required
                       validate-on-blur
-                      @blur="birthday = parseDate(patient.birthday)" />
+                      @blur="patient.birthday = parseDate(birthday)" />
                     <v-date-picker
-                      v-model="birthday"
+                      v-model="patient.birthday"
                       :max="new Date().toISOString().substr(0, 10)"
                       locale="de-de"
-                      @input="patient.birthday = formatDate($event); $refs.menu.save($event)"
+                      @input="birthday = formatDate($event); $refs.menu.save($event)"
                       no-title />
                   </v-menu>
                 </v-flex>
@@ -93,12 +93,18 @@
       </v-layout>
     </v-container>
     <v-btn
+      v-if="!editMode"
       class="ml-0 mt-4"
-      @click="goToPreviousStep">Zurück</v-btn>
+      @click="goToPreviousStep">
+      Zurück
+    </v-btn>
     <v-btn
       class="mt-4"
       type="submit"
-      color="primary">Weiter</v-btn>
+      color="primary">
+        <template v-if="editMode">Speichern</template>
+        <template v-else>Weiter</template>
+      </v-btn>
   </v-form>
 </template>
 
@@ -106,20 +112,18 @@
 import SSNValidator from "ssn-aut-validator";
 import { parse as parsePhone } from "libphonenumber-js";
 
-import { mapGetters, mapMutations } from "vuex";
-import AsDataPrivacyDialog from "./utils/DataPrivacyDialog";
+import { mapGetters, mapMutations, mapState } from "vuex";
 import Slot from "@/models/slot";
 import Patient from "@/models/patient";
 import {
+  GO_STEP,
   GO_PREV_STEP,
   GO_NEXT_STEP,
+  SET_EDITMODE,
   ADD_PATIENT
 } from "@/plugins/vuex/mutation-types";
 
 export default {
-  components: {
-    AsDataPrivacyDialog
-  },
   props: {
     desiredSlot: {
       type: Slot,
@@ -139,12 +143,14 @@ export default {
       firstNameRules: [
         v => !!v || "Vorname ist ein Pflichtfeld",
         v =>
-          /^[a-zA-Z]+(\s[a-zA-Z]+)?$/.test(v) ||
+          /^[a-zA-ZäöüÄÖÜß]+(\s[a-zA-ZäöüÄÖÜß]+)?$/.test(v) ||
           "Vorname darf nur Buchstaben enthalten. Leerzeichen zwischen Namen sind erlaubt."
       ],
       lastNameRules: [
         v => !!v || "Nachname ist ein Pflichtfeld",
-        v => /^[a-zA-Z]+$/.test(v) || "Nachname darf nur Buchstaben enthalten"
+        v =>
+          /^[a-zA-ZäöüÄÖÜß]+$/.test(v) ||
+          "Nachname darf nur Buchstaben enthalten"
       ],
       insuranceNumberRules: [
         v => !!v || "SVNr ist ein Pflichtfeld",
@@ -175,11 +181,19 @@ export default {
       ]
     };
   },
-  computed: mapGetters(["patients"]),
+  computed: {
+    ...mapState({
+      currentStep: state => state.currentStep,
+      editMode: state => state.editMode
+    }),
+    ...mapGetters(["patients"])
+  },
   methods: {
     ...mapMutations({
+      goStep: GO_STEP,
       goPreviousStep: GO_PREV_STEP,
       goNextStep: GO_NEXT_STEP,
+      setEditMode: SET_EDITMODE,
       addPatient: ADD_PATIENT
     }),
     formatDate(date) {
@@ -204,9 +218,14 @@ export default {
     goToNextStep() {
       if (!this.$refs.form.validate()) return;
 
-      this.patient.slots = [this.desiredSlot.time];
+      this.patient.slots = [this.desiredSlot];
       this.addPatient(this.patient);
-      this.goNextStep();
+
+      if (this.editMode) {
+        this.goPreviousStep();
+      } else {
+        this.goNextStep();
+      }
     }
   },
   mounted() {
