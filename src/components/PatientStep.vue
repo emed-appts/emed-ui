@@ -1,125 +1,105 @@
 <template>
-  <div>
-    <h2 class="headline mb-4">
-      Wir benötigen noch ein paar Angaben
-      <small class="d-inline-block mt-2">für den Termin am {{ slot.time | moment('DD.MM.YYYY [um] HH:mm') }}</small>
-    </h2>
-    <v-form
-      ref="form"
-      v-model="valid">
-      <v-container
-        fluid
-        grid-list-xl>
-        <v-layout
-          row
-          wrap>
-          <v-flex
-            xs12
-            sm5>
-            <v-text-field
-              v-model="patient.firstName"
-              :rules="firstNameRules"
-              label="Vorname"
-              required
-              autofocus
-              validate-on-blur />
-          </v-flex>
-          <v-flex
-            xs12
-            sm7>
-            <v-text-field
-              v-model="patient.lastName"
-              :rules="lastNameRules"
-              label="Nachname"
-              required
-              validate-on-blur />
-          </v-flex>
-          <v-flex
-            xs12
-            sm5>
-            <v-text-field
-              v-model="patient.insuranceNumber"
-              :rules="insuranceNumberRules"
-              label="SVNr"
-              placeholder="0000 DDMMYYYY"
-              hint="10-stellige SVNr"
-              mask="#### ######"
-              persistent-hint
-              required
-              validate-on-blur />
-          </v-flex>
-          <v-flex
-            xs12
-            sm7>
-            <v-menu
-              ref="menu"
-              v-model="menu"
-              :close-on-content-click="false"
-              lazy
-              transition="scale-transition"
-              offset-y
-              full-width
-              min-width="290px">
-              <v-text-field
-                slot="activator"
-                v-model="patient.birthday"
-                :rules="birthdayRules"
-                :readonly="$vuetify.breakpoint.smAndDown"
-                label="Geburtsdatum"
-                placeholder="DD.MM.YYYY"
-                append-icon="event"
-                required
-                validate-on-blur
-                @blur="birthday = parseDate(patient.birthday)" />
-              <v-date-picker
-                v-model="birthday"
-                :max="new Date().toISOString().substr(0, 10)"
-                locale="de-de"
-                @input="patient.birthday = formatDate($event); $refs.menu.save($event)"
-                no-title />
-            </v-menu>
-          </v-flex>
-          <v-flex
-            xs12
-            sm5>
-            <v-text-field
-              v-model="patient.phoneNumber"
-              :rules="phoneNumberRules"
-              label="Telefonnummer"
-              required
-              validate-on-blur />
-          </v-flex>
-          <v-flex
-            xs12
-            sm7>
-            <v-text-field
-              v-model="patient.email"
-              :rules="emailRules"
-              label="Email"
-              required
-              validate-on-blur />
-          </v-flex>
-          <v-flex
-            xs12>
-            <as-data-privacy-dialog>Datenschutzrichtlinien ansehen</as-data-privacy-dialog>
-            <v-checkbox
-              v-model="patient.acceptsPrivacyPolicy"
-              label="Ich bin mit den Datenschutzrichtlinien einverstanden"
-              :rules="acceptsPrivacyPolicyRules"
-              ripple />
-          </v-flex>
-        </v-layout>
-      </v-container>
-    </v-form>
+  <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="goToNextStep">
+    <h2 class="headline mb-4">Wir benötigen noch ein paar Angaben zum Patienten</h2>
+    <v-container fluid grid-list-xl>
+      <v-layout row wrap justify-center>
+        <v-flex xs12 sm8 md6 lg5 xl4>
+          <v-card class="elevation-3">
+            <v-card-title>
+              <div class="subheading">Termin {{ desiredSlot.time | moment('DD.MM.YYYY HH:mm') }}</div>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
+              <v-layout column>
+                <v-flex class="py-1">
+                  <v-text-field
+                    ref="focus"
+                    v-model="patient.firstName"
+                    :rules="firstNameRules"
+                    label="Vorname"
+                    autofocus
+                    required
+                    validate-on-blur />
+                </v-flex>
+                <v-flex class="py-1">
+                  <v-text-field
+                    v-model="patient.lastName"
+                    :rules="lastNameRules"
+                    label="Nachname"
+                    required
+                    validate-on-blur />
+                </v-flex>
+                <v-flex class="py-1">
+                  <v-text-field
+                    v-model="patient.insuranceNumber"
+                    :rules="insuranceNumberRules"
+                    label="SVNr"
+                    placeholder="0000 DDMMYYYY"
+                    hint="10-stellige SVNr"
+                    mask="#### ######"
+                    persistent-hint
+                    required
+                    validate-on-blur />
+                </v-flex>
+                <v-flex class="py-1">
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    min-width="290px"
+                    lazy
+                    offset-y
+                    full-width>
+                    <v-text-field
+                      slot="activator"
+                      v-model="patient.birthday"
+                      :rules="birthdayRules"
+                      :readonly="$vuetify.breakpoint.smAndDown"
+                      label="Geburtsdatum"
+                      placeholder="DD.MM.YYYY"
+                      append-icon="event"
+                      required
+                      validate-on-blur
+                      @blur="birthday = parseDate(patient.birthday)" />
+                    <v-date-picker
+                      v-model="birthday"
+                      :max="new Date().toISOString().substr(0, 10)"
+                      locale="de-de"
+                      @input="patient.birthday = formatDate($event); $refs.menu.save($event)"
+                      no-title />
+                  </v-menu>
+                </v-flex>
+                <v-flex class="py-1">
+                  <v-text-field
+                    v-model="patient.phoneNumber"
+                    :rules="phoneNumberRules"
+                    label="Telefonnummer"
+                    required
+                    validate-on-blur />
+                </v-flex>
+                <v-flex class="py-1">
+                  <v-text-field
+                    v-model="patient.email"
+                    :rules="emailRules"
+                    label="Email"
+                    required
+                    validate-on-blur />
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
     <v-btn
       class="ml-0 mt-4"
-      @click="goPreviousStep">Zurück</v-btn>
+      @click="goToPreviousStep">Zurück</v-btn>
     <v-btn
-      :disabled="!valid"
       class="mt-4"
-      color="primary"
-      @click="goToNextStep">Weiter</v-btn>
-  </div>
+      type="submit"
+      color="primary">Weiter</v-btn>
+  </v-form>
 </template>
 
 <script>
@@ -141,7 +121,7 @@ export default {
     AsDataPrivacyDialog
   },
   props: {
-    slot: {
+    desiredSlot: {
       type: Slot,
       required: true
     }
@@ -192,9 +172,6 @@ export default {
         v =>
           (v && Object.keys(parsePhone(v, "AT")).length != 0) ||
           "Telefon ist nicht gültig"
-      ],
-      acceptsPrivacyPolicyRules: [
-        v => !!v || "Datenschutzrichtlinien müssen zugestimmt werden"
       ]
     };
   },
@@ -219,11 +196,24 @@ export default {
 
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     },
+    goToPreviousStep() {
+      // reset data on going back
+      this.$refs.form.reset();
+      this.goPreviousStep();
+    },
     goToNextStep() {
-      this.patient.slots = [this.slot.time];
+      if (!this.$refs.form.validate()) return;
+
+      this.patient.slots = [this.desiredSlot.time];
       this.addPatient(this.patient);
       this.goNextStep();
     }
+  },
+  mounted() {
+    // IMPORTANT: needed for autofocus of first input field
+    requestAnimationFrame(() => {
+      this.$refs.focus.focus();
+    });
   }
 };
 </script>

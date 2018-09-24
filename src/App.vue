@@ -53,7 +53,8 @@
             v-for="(slot, index) in slots"
             :key="`content-${index}`"
             :step="4 + index">
-            <as-patient-step :slot="slot" />
+            <!-- IMPORTANT: v-if needed for autofocus in form -->
+            <as-patient-step v-if="currentStep === 4 + index" :desired-slot="slot" />
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>

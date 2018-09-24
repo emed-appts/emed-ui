@@ -30,9 +30,10 @@ export default {
     }
   },
   [SET_SLOTS](state, slots) {
-    slots.forEach(slot => {
+    Vue.set(state, "slots", {});
+    for (let slot of slots) {
       Vue.set(state.slots, slot.time.getTime(), slot);
-    });
+    }
   },
   [ADD_PATIENT](state, patient) {
     if (!state.patients[patient.insuranceNumber]) {
