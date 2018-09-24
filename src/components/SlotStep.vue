@@ -15,7 +15,7 @@
           md6>
           <as-date-picker
             :events="events"
-            :hightlight-events="slots"
+            :highlight-events="highlightEvents"
             :show-loading-spinner="loading"
             :picker-view.sync="pickerView"
             @input="selectEvents" />
@@ -81,6 +81,9 @@ export default {
     },
     events() {
       return this.availableMonthlySlots.map(slot => slot.time.toISOString());
+    },
+    highlightEvents() {
+      return this.slots.map(slot => slot.time.toISOString());
     }
   },
   methods: {

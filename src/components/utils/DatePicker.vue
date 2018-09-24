@@ -62,7 +62,7 @@ export default {
       type: Array,
       default: () => []
     },
-    highlightedEvents: {
+    highlightEvents: {
       type: Array,
       default: () => []
     },
@@ -96,15 +96,15 @@ export default {
                 return true;
             }
           })
-          .concat(this.highlightedEvents)
+          .concat(this.highlightEvents)
           .sort(utils.dateCompareFn)
       );
     },
     eventDays() {
       return _.uniq(this.filteredEvents.map(evt => evt.substr(0, 10)));
     },
-    highlightedEventDays() {
-      return _.uniq(this.highlightedEvents.map(evt => evt.substr(0, 10)));
+    highlightEventDays() {
+      return _.uniq(this.highlightEvents.map(evt => evt.substr(0, 10)));
     },
     loading() {
       return this.showLoadingSpinner || this.fakeLoading;
@@ -116,8 +116,8 @@ export default {
       return this.eventDays.includes(val);
     },
     // used to set color depending on event
-    dateColors(val) {
-      return this.highlightedEventDays.includes(val) ? "secondary" : "primary";
+    dateColors(date) {
+      return this.highlightEventDays.includes(date) ? "secondary" : "primary";
     },
     updateCalendar() {
       // shows loader to visualize changes in datepicker
