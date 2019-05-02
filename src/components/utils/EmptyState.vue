@@ -1,20 +1,17 @@
 <template>
-  <v-layout
-    class="empty-state"
-    column
-    align-center>
+  <v-layout class="empty-state" column align-center>
     <v-flex v-if="icon">
       <v-icon class="empty-state__icon">{{ icon }}</v-icon>
     </v-flex>
     <v-flex>
-      <strong
-        v-if="label"
-        class="empty-state__label headline mb-2">{{ label }}</strong>
+      <strong v-if="label" class="empty-state__label headline mb-2">
+        {{ label }}
+      </strong>
     </v-flex>
     <v-flex>
-      <p
-        v-if="description"
-        class="empty-state__description subheading">{{ description }}</p>
+      <p v-if="description" class="empty-state__description subheading">
+        {{ description }}
+      </p>
     </v-flex>
   </v-layout>
 </template>
@@ -24,7 +21,7 @@ export default {
   props: {
     icon: {
       type: String,
-      default: "event_busy"
+      default: "mdi-calendar-remove"
     },
     label: {
       type: String,

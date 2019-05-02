@@ -5,19 +5,11 @@
       :row="$vuetify.breakpoint.smOnly || $vuetify.breakpoint.lgAndUp"
       class="pt-0"
       label="Ist es Ihnen nur zu bestimmten Zeiten möglich?"
-      @change="updateCalendar">
-      <v-radio
-        value=""
-        label="Keine Präferenz"
-        ripple/>
-      <v-radio
-        value="am"
-        label="Vormittag"
-        ripple/>
-      <v-radio
-        value="pm"
-        label="Nachmittag"
-        ripple/>
+      @change="updateCalendar"
+    >
+      <v-radio value="" label="Keine Präferenz" ripple />
+      <v-radio value="am" label="Vormittag" ripple />
+      <v-radio value="pm" label="Nachmittag" ripple />
     </v-radio-group>
     <as-loading :show="loading">
       <v-date-picker
@@ -32,21 +24,34 @@
         first-day-of-week="1"
         full-width
         no-title
-        @input="selectEventDay" />
+        @input="selectEventDay"
+      />
     </as-loading>
     <dl class="date-picker-table__legend d-flex">
-      <dt class="date-picker-table__event-term flex d-inline-flex justify-center align-center">
+      <dt
+        class="date-picker-table__event-term flex d-inline-flex justify-center align-center"
+      >
         <div class="v-date-picker-table__event text-hide primary">
           Orange
         </div>
       </dt>
-      <dd class="date-picker-table__event-description flex d-inline-flex align-center">Verfügbare Termine</dd>
-      <dt class="date-picker-table__event-term flex d-inline-flex justify-center align-center">
+      <dd
+        class="date-picker-table__event-description flex d-inline-flex align-center"
+      >
+        Verfügbare Termine
+      </dd>
+      <dt
+        class="date-picker-table__event-term flex d-inline-flex justify-center align-center"
+      >
         <div class="v-date-picker-table__event text-hide secondary">
           Braun
         </div>
       </dt>
-      <dd class="date-picker-table__event-description flex d-inline-flex align-center">Ausgewählte Termine</dd>
+      <dd
+        class="date-picker-table__event-description flex d-inline-flex align-center"
+      >
+        Ausgewählte Termine
+      </dd>
     </dl>
   </div>
 </template>
@@ -189,5 +194,7 @@ export default {
 .date-picker-table__legend >>> .v-date-picker-table__event
   position: static
   transform: none
+  height: 8px
   max-width: 8px
+  border-radius: 50%
 </style>
