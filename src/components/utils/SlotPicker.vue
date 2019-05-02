@@ -1,29 +1,36 @@
 <template>
   <v-card class="slot-picker elevation-3">
     <v-card-text>
-      <v-list
-        v-if="slots.length > 0"
-        subheader>
+      <v-list v-if="slots.length > 0" subheader>
         <v-subheader class="justify-space-between">
           Termine am {{ date | moment("DD.MM.") }}
           <small
             :class="{ 'error--text': hightlightHint }"
-            class="text-xs-right">max. {{ maxSelect }} {{ maxSelect > 1 || maxSelect === 0 ? 'Termine' : 'Termin' }} möglich</small>
+            class="text-xs-right"
+          >
+            max. {{ maxSelect }}
+            {{ maxSelect > 1 ? "Termine" : "Termin" }}
+            möglich
+          </small>
         </v-subheader>
         <v-list-tile
           v-for="slot in slotsFromDate"
           :key="slot.time.getTime()"
           ripple
-          @click.capture.stop="toggle(slot)">
+          @click.capture.stop="toggle(slot)"
+        >
           <v-list-tile-action>
             <v-checkbox
               :value="slot.selected"
               :disabled="isDisabled(slot)"
               readonly
-              ripple />
+              ripple
+            />
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>{{ slot.time | moment("HH:mm") }}</v-list-tile-title>
+            <v-list-tile-title>
+              {{ slot.time | moment("HH:mm") }}
+            </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <template v-if="slotsFromOtherDates.length > 0">
@@ -32,29 +39,38 @@
             Termine an anderen Tagen
           </v-subheader>
           <v-list-tile
-          v-for="slot in slotsFromOtherDates"
-          :key="slot.time.getTime()"
-          ripple
-          @click.capture.stop="toggle(slot)">
-          <v-list-tile-action>
-            <v-checkbox
-              v-model="slot.selected"
-              :disabled="isDisabled(slot)"
-              readonly
-              ripple />
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>{{ slot.time | moment("DD.MM. HH:mm") }}</v-list-tile-title>
-            <v-list-tile-sub-title v-if="calendar && calendar.id !== slot.calendar.id">{{ slot.calendar.title }}</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+            v-for="slot in slotsFromOtherDates"
+            :key="slot.time.getTime()"
+            ripple
+            @click.capture.stop="toggle(slot)"
+          >
+            <v-list-tile-action>
+              <v-checkbox
+                v-model="slot.selected"
+                :disabled="isDisabled(slot)"
+                readonly
+                ripple
+              />
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                {{ slot.time | moment("DD.MM. HH:mm") }}
+              </v-list-tile-title>
+              <v-list-tile-sub-title
+                v-if="calendar && calendar.id !== slot.calendar.id"
+              >
+                {{ slot.calendar.id }}
+              </v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
         </template>
       </v-list>
       <as-empty-state
         v-if="slots.length === 0"
         :class="{ 'mt-5': !$vuetify.breakpoint.smAndDown }"
         label="Keine Termine vorhanden"
-        description="Wählen Sie einen Tag im Kalender aus."/>
+        description="Wählen Sie einen Tag im Kalender aus."
+      />
     </v-card-text>
   </v-card>
 </template>

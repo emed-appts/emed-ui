@@ -5,30 +5,30 @@
       <as-loading :show="loading">
         <v-list three-line v-if="calendars.length">
           <template v-for="(calendar, index) in calendars">
-            <v-list-tile
-              :key="index"
-              ripple
-              @click="selectCalendar(calendar)">
+            <v-list-tile :key="index" ripple @click="selectCalendar(calendar)">
               <v-list-tile-content>
-                <v-list-tile-title>{{ calendar.title }}&nbsp;
-                  <small class="d-inline-block" v-if="calendar.subtitle">{{ calendar.subtitle }}</small>
+                <v-list-tile-title>
+                  {{ calendar.title }}&nbsp;
+                  <small class="d-inline-block" v-if="calendar.subtitle">
+                    {{ calendar.subtitle }}
+                  </small>
                 </v-list-tile-title>
                 <v-list-tile-sub-title
                   v-if="calendar.description"
                   class="text--primary"
-                  v-html="calendar.description" />
+                  v-html="calendar.description"
+                />
               </v-list-tile-content>
             </v-list-tile>
             <v-divider
               v-if="index + 1 < calendars.length"
-              :key="`divider-${index}`" />
+              :key="`divider-${index}`"
+            />
           </template>
         </v-list>
       </as-loading>
     </v-card>
-    <v-btn
-      class="ml-0 mt-4"
-      @click="goPreviousStep">Zurück</v-btn>
+    <v-btn class="ml-0 mt-4" @click="goPreviousStep">Zurück</v-btn>
   </div>
 </template>
 

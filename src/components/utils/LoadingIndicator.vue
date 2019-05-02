@@ -1,7 +1,5 @@
 <template>
-  <div
-    :class="{ active: show }"
-    class="loading__wrapper">
+  <div :class="{ active: show }" class="loading__wrapper">
     <slot />
     <div class="loading__overlay">
       <v-progress-circular
@@ -9,7 +7,8 @@
         :size="90"
         :width="3"
         indeterminate
-        color="secondary"/>
+        color="secondary"
+      />
     </div>
   </div>
 </template>

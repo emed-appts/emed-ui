@@ -116,12 +116,12 @@
       Zurück
     </v-btn>
     <v-btn class="mt-4" type="submit" color="primary">
-      <template v-if="editMode"
-        >Speichern</template
-      >
-      <template v-else
-        >Weiter</template
-      >
+      <template v-if="editMode">
+        Speichern
+      </template>
+      <template v-else>
+        Weiter
+      </template>
     </v-btn>
   </v-form>
 </template>

@@ -17,62 +17,66 @@
             <v-list dense>
               <v-list-tile>
                 <v-list-tile-content>Termintyp:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{
-                  patient.slots[0].calendar.title
-                }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  {{ patient.slots[0].calendar.title }}
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>Name:</v-list-tile-content>
-                <v-list-tile-content class="align-end"
-                  >{{ patient.firstName }}
-                  {{ patient.lastName }}</v-list-tile-content
-                >
+                <v-list-tile-content class="align-end">
+                  {{ patient.firstName }} {{ patient.lastName }}
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>Email:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{
-                  patient.email
-                }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  {{ patient.email }}
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>Telefon:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{
-                  patient.phoneNumber
-                }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  {{ patient.phoneNumber }}
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>SVNR:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{
-                  patient.insuranceNumber
-                }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  {{ patient.insuranceNumber }}
+                </v-list-tile-content>
               </v-list-tile>
               <v-list-tile>
                 <v-list-tile-content>Geburtstag:</v-list-tile-content>
-                <v-list-tile-content class="align-end">{{
-                  patient.birthday | moment("DD.MM.YYYY")
-                }}</v-list-tile-content>
+                <v-list-tile-content class="align-end">
+                  {{ patient.birthday | moment("DD.MM.YYYY") }}
+                </v-list-tile-content>
               </v-list-tile>
             </v-list>
             <v-divider />
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="secondary" flat @click="editPatient(index, patient)"
-                >Bearbeiten</v-btn
+              <v-btn
+                color="secondary"
+                flat
+                @click="editPatient(index, patient)"
               >
+                Bearbeiten
+              </v-btn>
               <v-btn
                 color="secondary"
                 flat
                 @click="deleteSlot(patient.slots[0])"
-                >Löschen</v-btn
               >
+                Löschen
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
         <v-flex xs12>
           <v-form v-model="valid">
-            <as-data-privacy-dialog
-              >Datenschutzrichtlinien ansehen</as-data-privacy-dialog
-            >
+            <as-data-privacy-dialog>
+              Datenschutzrichtlinien ansehen
+            </as-data-privacy-dialog>
             <v-checkbox
               class="mt-1"
               v-model="acceptsPrivacyPolicy"
@@ -91,8 +95,9 @@
       color="primary"
       :disabled="!valid"
       @click="completeReservation"
-      >Verbindlich reservieren</v-btn
     >
+      Verbindlich reservieren
+    </v-btn>
   </div>
 </template>
 
