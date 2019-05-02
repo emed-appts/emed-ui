@@ -1,8 +1,8 @@
-// libraries
-import Vue from "vue";
-
 // polyfills
 import "@babel/polyfill";
+
+// libraries
+import Vue from "vue";
 
 // plugins
 import "./plugins/vuetify";
@@ -15,7 +15,9 @@ import AsEmptyState from "./components/utils/EmptyState.vue";
 import AsLoadingIndicator from "./components/utils/LoadingIndicator.vue";
 
 // styles
-import "vuetify/dist/vuetify.min.css";
+import "roboto-fontface/css/roboto/roboto-fontface.css";
+import "@mdi/font/css/materialdesignicons.css";
+
 import "./assets/main.styl";
 
 Vue.config.productionTip = false;
