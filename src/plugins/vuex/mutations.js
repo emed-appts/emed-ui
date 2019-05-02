@@ -12,11 +12,13 @@ import {
   SET_EDITMODE,
   RESET
 } from "./mutation-types";
+import utils from "./utils";
 
 export default {
   [RESET](state) {
     state.previousStep = 0;
     state.currentStep = 1;
+    state.processID = utils.generateID();
     state.editMode = false;
     state.calendarInProcess = null;
     for (let slot in state.slots) {

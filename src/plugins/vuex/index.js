@@ -5,12 +5,14 @@ import * as getters from "./getters";
 import actions from "./actions";
 import mutations from "./mutations";
 import plugins from "./plugins";
+import utils from "./utils";
 
 Vue.use(Vuex);
 
 const state = {
   previousStep: 0,
   currentStep: 1,
+  processID: utils.generateID(),
   editMode: false,
   calendarInProcess: null,
   calendars: {
