@@ -10,9 +10,8 @@ import utils from "./utils";
 Vue.use(Vuex);
 
 const state = {
-  previousStep: 0,
-  currentStep: 1,
   processID: utils.generateID(),
+  steps: [1],
   editMode: false,
   calendarInProcess: null,
   calendars: {

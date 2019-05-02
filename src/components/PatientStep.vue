@@ -1,12 +1,21 @@
 <template>
-  <v-form ref="form" v-model="valid" lazy-validation @submit.prevent="goToNextStep">
-    <h2 class="headline mb-4">Wir benötigen noch ein paar Angaben zum Patienten</h2>
+  <v-form
+    ref="form"
+    v-model="valid"
+    lazy-validation
+    @submit.prevent="goToNextStep"
+  >
+    <h2 class="headline mb-4">
+      Wir benötigen noch ein paar Angaben zum Patienten
+    </h2>
     <v-container fluid grid-list-xl>
       <v-layout row wrap justify-center>
         <v-flex xs12 sm8 md6 lg5 xl4>
           <v-card class="elevation-3">
             <v-card-title>
-              <div class="subheading">Termin {{ desiredSlot.time | moment('DD.MM.YYYY HH:mm') }}</div>
+              <div class="subheading">
+                Termin {{ desiredSlot.time | moment("DD.MM.YYYY HH:mm") }}
+              </div>
             </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
@@ -19,7 +28,8 @@
                     label="Vorname"
                     autofocus
                     required
-                    validate-on-blur />
+                    validate-on-blur
+                  />
                 </v-flex>
                 <v-flex class="py-1">
                   <v-text-field
@@ -27,7 +37,8 @@
                     :rules="lastNameRules"
                     label="Nachname"
                     required
-                    validate-on-blur />
+                    validate-on-blur
+                  />
                 </v-flex>
                 <v-flex class="py-1">
                   <v-text-field
@@ -39,7 +50,8 @@
                     mask="#### ######"
                     persistent-hint
                     required
-                    validate-on-blur />
+                    validate-on-blur
+                  />
                 </v-flex>
                 <v-flex class="py-1">
                   <v-menu
@@ -50,7 +62,8 @@
                     min-width="290px"
                     lazy
                     offset-y
-                    full-width>
+                    full-width
+                  >
                     <v-text-field
                       slot="activator"
                       v-model="birthday"
@@ -61,13 +74,18 @@
                       append-icon="event"
                       required
                       validate-on-blur
-                      @blur="patient.birthday = parseDate(birthday)" />
+                      @blur="patient.birthday = parseDate(birthday)"
+                    />
                     <v-date-picker
                       v-model="patient.birthday"
                       :max="new Date().toISOString().substr(0, 10)"
                       locale="de-de"
-                      @input="birthday = formatDate($event); $refs.menu.save($event)"
-                      no-title />
+                      @input="
+                        birthday = formatDate($event);
+                        $refs.menu.save($event);
+                      "
+                      no-title
+                    />
                   </v-menu>
                 </v-flex>
                 <v-flex class="py-1">
@@ -76,7 +94,8 @@
                     :rules="phoneNumberRules"
                     label="Telefonnummer"
                     required
-                    validate-on-blur />
+                    validate-on-blur
+                  />
                 </v-flex>
                 <v-flex class="py-1">
                   <v-text-field
@@ -84,7 +103,8 @@
                     :rules="emailRules"
                     label="Email"
                     required
-                    validate-on-blur />
+                    validate-on-blur
+                  />
                 </v-flex>
               </v-layout>
             </v-card-text>
@@ -92,19 +112,17 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <v-btn
-      v-if="!editMode"
-      class="ml-0 mt-4"
-      @click="goToPreviousStep">
+    <v-btn v-if="!editMode" class="ml-0 mt-4" @click="goToPreviousStep">
       Zurück
     </v-btn>
-    <v-btn
-      class="mt-4"
-      type="submit"
-      color="primary">
-        <template v-if="editMode">Speichern</template>
-        <template v-else>Weiter</template>
-      </v-btn>
+    <v-btn class="mt-4" type="submit" color="primary">
+      <template v-if="editMode"
+        >Speichern</template
+      >
+      <template v-else
+        >Weiter</template
+      >
+    </v-btn>
   </v-form>
 </template>
 
@@ -119,7 +137,7 @@ import {
   GO_STEP,
   GO_PREV_STEP,
   GO_NEXT_STEP,
-  SET_EDITMODE,
+  DISABLE_EDITMODE,
   ADD_PATIENT
 } from "@/plugins/vuex/mutation-types";
 
@@ -183,17 +201,16 @@ export default {
   },
   computed: {
     ...mapState({
-      currentStep: state => state.currentStep,
       editMode: state => state.editMode
     }),
-    ...mapGetters(["patients"])
+    ...mapGetters(["currentStep", "patients"])
   },
   methods: {
     ...mapMutations({
       goStep: GO_STEP,
       goPreviousStep: GO_PREV_STEP,
       goNextStep: GO_NEXT_STEP,
-      setEditMode: SET_EDITMODE,
+      disableEditMode: DISABLE_EDITMODE,
       addPatient: ADD_PATIENT
     }),
     formatDate(date) {
@@ -222,6 +239,7 @@ export default {
       this.addPatient(this.patient);
 
       if (this.editMode) {
+        this.disableEditMode();
         this.goPreviousStep();
       } else {
         this.goNextStep();

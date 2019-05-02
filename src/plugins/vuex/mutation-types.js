@@ -11,6 +11,7 @@ export const REMOVE_SLOT = "REMOVE_SLOT";
 export const ADD_PATIENT = "ADD_PATIENT";
 export const REMOVE_PATIENT = "REMOVE_PATIENT";
 
-export const SET_EDITMODE = "SET_EDITMODE";
+export const ENABLE_EDITMODE = "ENABLE_EDITMODE";
+export const DISABLE_EDITMODE = "DISABLE_EDITMODE";
 
 export const RESET = "RESET";

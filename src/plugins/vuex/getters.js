@@ -1,3 +1,8 @@
+// get current step
+export const currentStep = state => {
+  return state.steps[state.steps.length - 1];
+};
+
 // get calendars as array
 export const calendars = state => {
   const ids = Object.keys(state.calendars);

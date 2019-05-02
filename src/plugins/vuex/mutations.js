@@ -9,16 +9,16 @@ import {
   REMOVE_SLOT,
   ADD_PATIENT,
   REMOVE_PATIENT,
-  SET_EDITMODE,
+  ENABLE_EDITMODE,
+  DISABLE_EDITMODE,
   RESET
 } from "./mutation-types";
 import utils from "./utils";
 
 export default {
   [RESET](state) {
-    state.previousStep = 0;
-    state.currentStep = 1;
     state.processID = utils.generateID();
+    state.steps = [1];
     state.editMode = false;
     state.calendarInProcess = null;
     for (let slot in state.slots) {
@@ -29,13 +29,14 @@ export default {
     }
   },
   [GO_STEP](state, step) {
-    goStep(state, step);
+    state.steps.push(step);
   },
   [GO_NEXT_STEP](state) {
-    goStep(state, state.currentStep + 1);
+    const currentStep = state.steps[state.steps.length - 1];
+    state.steps.push(currentStep + 1);
   },
   [GO_PREV_STEP](state) {
-    state.currentStep = state.previousStep;
+    state.steps.pop();
   },
   [SET_CALENDAR](state, calendar) {
     state.calendarInProcess = calendar;
@@ -76,15 +77,13 @@ export default {
   [REMOVE_PATIENT](state, patient) {
     removePatient(state, patient);
   },
-  [SET_EDITMODE](state, editMode) {
-    state.editMode = editMode;
+  [ENABLE_EDITMODE](state) {
+    state.editMode = true;
+  },
+  [DISABLE_EDITMODE](state) {
+    state.editMode = false;
   }
 };
-
-function goStep(state, step) {
-  state.previousStep = state.currentStep;
-  state.currentStep = step;
-}
 
 function removePatient(state, patient) {
   Vue.delete(state.patients, patient.insuranceNumber);
