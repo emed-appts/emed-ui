@@ -123,6 +123,9 @@
         Weiter
       </template>
     </v-btn>
+    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+      Abbrechen
+    </v-btn>
   </v-form>
 </template>
 
@@ -138,7 +141,8 @@ import {
   GO_PREV_STEP,
   GO_NEXT_STEP,
   DISABLE_EDITMODE,
-  ADD_PATIENT
+  ADD_PATIENT,
+  RESET
 } from "@/plugins/vuex/mutation-types";
 
 export default {
@@ -211,7 +215,8 @@ export default {
       goPreviousStep: GO_PREV_STEP,
       goNextStep: GO_NEXT_STEP,
       disableEditMode: DISABLE_EDITMODE,
-      addPatient: ADD_PATIENT
+      addPatient: ADD_PATIENT,
+      resetProcess: RESET
     }),
     formatDate(date) {
       if (!date) return null;

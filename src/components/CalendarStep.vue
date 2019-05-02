@@ -29,6 +29,9 @@
       </as-loading>
     </v-card>
     <v-btn class="ml-0 mt-4" @click="goPreviousStep">Zurück</v-btn>
+    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+      Abbrechen
+    </v-btn>
   </div>
 </template>
 
@@ -38,7 +41,8 @@ import { GET_ALL_CALENDARS } from "@/plugins/vuex/action-types";
 import {
   GO_NEXT_STEP,
   GO_PREV_STEP,
-  SET_CALENDAR
+  SET_CALENDAR,
+  RESET
 } from "@/plugins/vuex/mutation-types";
 
 export default {
@@ -53,7 +57,8 @@ export default {
     ...mapMutations({
       goNextStep: GO_NEXT_STEP,
       goPreviousStep: GO_PREV_STEP,
-      setCalendar: SET_CALENDAR
+      setCalendar: SET_CALENDAR,
+      resetProcess: RESET
     }),
     selectCalendar(calendar) {
       this.setCalendar(calendar);

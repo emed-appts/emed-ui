@@ -98,6 +98,9 @@
     >
       Verbindlich reservieren
     </v-btn>
+    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+      Abbrechen
+    </v-btn>
   </div>
 </template>
 
@@ -130,7 +133,7 @@ export default {
       enableEditMode: ENABLE_EDITMODE,
       removeSlot: REMOVE_SLOT,
       removePatient: REMOVE_PATIENT,
-      resetState: RESET
+      resetProcess: RESET
     }),
     goToPreviousStep() {
       const index = this.patients.length - 1;
@@ -148,7 +151,7 @@ export default {
       this.removeSlot(slot);
       if (this.slots.length === 0) {
         // no slot is left so restart from beginning
-        this.resetState();
+        this.resetProcess();
       }
     },
     completeReservation() {

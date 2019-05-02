@@ -36,6 +36,9 @@
     >
       Weiter
     </v-btn>
+    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+      Abbrechen
+    </v-btn>
   </div>
 </template>
 
@@ -50,7 +53,8 @@ import {
   GO_PREV_STEP,
   GO_NEXT_STEP,
   SET_CALENDAR,
-  SET_SLOTS
+  SET_SLOTS,
+  RESET
 } from "@/plugins/vuex/mutation-types";
 
 export default {
@@ -93,7 +97,8 @@ export default {
       goPreviousStep: GO_PREV_STEP,
       goNextStep: GO_NEXT_STEP,
       setCalendar: SET_CALENDAR,
-      setSlots: SET_SLOTS
+      setSlots: SET_SLOTS,
+      resetProcess: RESET
     }),
     selectEvents(events) {
       this.availableDailySlots = this.availableMonthlySlots.filter(slot =>
