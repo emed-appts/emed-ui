@@ -1,43 +1,37 @@
 <template>
   <div>
-    <v-container
-      fluid
-      grid-list-xl>
-      <v-layout
-        row
-        wrap
-        fill-height>
+    <v-container fluid grid-list-xl>
+      <v-layout row wrap fill-height>
         <v-flex xs12>
           <h2 class="headline">Finden Sie einen passenden Termin</h2>
         </v-flex>
-        <v-flex
-          xs12
-          md6>
+        <v-flex xs12 md6>
           <as-date-picker
             :events="events"
             :highlight-events="highlightEvents"
             :show-loading-spinner="loading"
             :picker-view.sync="pickerView"
-            @input="selectEvents" />
+            @input="selectEvents"
+          />
         </v-flex>
-        <v-flex
-          xs12
-          md6>
+        <v-flex xs12 md6>
           <as-slot-picker
             :value="slots"
             :slots="pickableSlots"
-            @input="selectSlots" />
+            @input="selectSlots"
+          />
         </v-flex>
       </v-layout>
     </v-container>
-    <v-btn
-      class="ml-0 mt-4"
-      @click="goToPreviousStep">Zurück</v-btn>
+    <v-btn class="ml-0 mt-4" @click="goToPreviousStep">Zurück</v-btn>
     <v-btn
       :disabled="slots.length === 0"
       class="mt-4"
       color="primary"
-      @click="goToNextStep">Weiter</v-btn>
+      @click="goToNextStep"
+    >
+      Weiter
+    </v-btn>
   </div>
 </template>
 
@@ -117,12 +111,13 @@ export default {
     // loads slots from given date to end of month
     loadSlots(fromDate) {
       this.loading = true;
-      this.loadCalendar({
+      return this.loadCalendar({
         calendar: this.calendar.id,
         filter: generateAPIFilter(fromDate)
       }).then(calendar => {
         this.loading = false;
         this.availableMonthlySlots = calendar.slots;
+        return calendar.slots;
       });
     }
   },
@@ -134,7 +129,14 @@ export default {
         return;
       }
 
-      this.loadSlots(new Date());
+      this.loadSlots().then(slots => {
+        if (
+          slots.length > 0 &&
+          slots[0].time.getMonth() !== this.pickerView.getMonth()
+        ) {
+          this.pickerView = new Date(slots[0].time.getTime());
+        }
+      });
     },
     pickerView: function(val) {
       if (!this.calendar) return;
@@ -144,6 +146,12 @@ export default {
 };
 
 function generateAPIFilter(fromDate) {
+  if (!fromDate) {
+    return {
+      maxCount: process.env.VUE_APP_API_SLOT_MAX_COUNT
+    };
+  }
+
   const maxDate = new Date(fromDate.getTime());
   maxDate.setHours(0, 0, 0, 0);
   maxDate.setDate(1);
