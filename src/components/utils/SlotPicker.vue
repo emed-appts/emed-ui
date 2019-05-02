@@ -56,11 +56,6 @@
               <v-list-tile-title>
                 {{ slot.time | moment("DD.MM. HH:mm") }}
               </v-list-tile-title>
-              <v-list-tile-sub-title
-                v-if="calendar && calendar.id !== slot.calendar.id"
-              >
-                {{ slot.calendar.id }}
-              </v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -77,7 +72,6 @@
 
 <script>
 import _ from "lodash";
-import { mapState } from "vuex";
 
 import utils from "@/utils";
 
@@ -98,9 +92,6 @@ export default {
     selectedSlots: []
   }),
   computed: {
-    ...mapState({
-      calendar: state => state.calendarInProcess
-    }),
     date() {
       return this.slots.length > 0 && this.slots[0].time;
     },

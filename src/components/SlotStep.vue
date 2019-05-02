@@ -4,6 +4,10 @@
       <v-layout row wrap fill-height>
         <v-flex xs12>
           <h2 class="headline">Finden Sie einen passenden Termin</h2>
+          <p class="subheading" v-if="maxSelect > 1">
+            Sie können bis zu {{ maxSelect }} Termine auswählen. Diese können
+            auch an unterschiedlichen Tagen stattfinden.
+          </p>
         </v-flex>
         <v-flex xs12 md6>
           <as-date-picker
@@ -55,6 +59,7 @@ export default {
     AsSlotPicker
   },
   data: () => ({
+    maxSelect: parseInt(process.env.VUE_APP_MAX_POSSIBLE_SLOTS),
     loading: false,
     pickerView: null,
     // selected slots
@@ -99,6 +104,12 @@ export default {
       this.slots = slots;
     },
     goToPreviousStep() {
+      // reset local state
+      this.slots = [];
+      this.availableDailySlots = [];
+      this.availableMonthlySlots = [];
+      // reset vuex state
+      this.setSlots([]);
       this.setCalendar(null);
       this.goPreviousStep();
     },
