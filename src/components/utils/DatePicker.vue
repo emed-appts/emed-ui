@@ -5,12 +5,15 @@
       :row="$vuetify.breakpoint.smOnly || $vuetify.breakpoint.lgAndUp"
       class="pt-0"
       label="Ist es Ihnen nur zu bestimmten Zeiten möglich?"
-      @change="updateCalendar"
+      @change="emitFilter"
     >
       <v-radio value="" label="Keine Präferenz" ripple />
       <v-radio value="am" label="Vormittag" ripple />
       <v-radio value="pm" label="Nachmittag" ripple />
     </v-radio-group>
+    <p class="accent--text" v-if="events.length === 0">
+      Es wurden keine passenden Termine gefunden.
+    </p>
     <as-loading :show="loading">
       <v-date-picker
         v-model="date"
@@ -18,13 +21,14 @@
         :event-color="dateColors"
         :allowed-dates="allowedDates"
         :min="new Date().toISOString().substr(0, 10)"
-        :picker-date.sync="pickerDate"
+        :picker-date="pickerDate"
         class="elevation-3"
         locale="de-de"
         first-day-of-week="1"
         full-width
         no-title
-        @input="selectEventDay"
+        @update:pickerDate="emitPickerView"
+        @input="emitEventDay"
       />
     </as-loading>
     <dl class="date-picker-table__legend d-flex">
@@ -75,44 +79,28 @@ export default {
     pickerView: Date
   },
   data: () => ({
-    // used to update slots on e.g. switch between months
-    pickerDate: null,
     // selected date from datepicker
     date: null,
     // filter by none/am/pm
-    timeFilter: "",
-    // shows loading spinner on fake load
-    fakeLoading: false
+    timeFilter: ""
   }),
   computed: {
-    filteredEvents() {
+    uniqueEvents() {
       return _.uniq(
-        this.events
-          .filter(evt => {
-            let event = utils.parseISOLocal(evt);
-            let midDay = new Date(event.getTime());
-            midDay.setHours(12, 0, 0, 0);
-            switch (this.timeFilter) {
-              case "am":
-                return event < midDay;
-              case "pm":
-                return event >= midDay;
-              default:
-                return true;
-            }
-          })
-          .concat(this.highlightEvents)
-          .sort(utils.dateCompareFn)
+        this.events.concat(this.highlightEvents).sort(utils.dateCompareFn)
       );
     },
     eventDays() {
-      return _.uniq(this.filteredEvents.map(evt => evt.substr(0, 10)));
+      return _.uniq(this.uniqueEvents.map(evt => evt.substr(0, 10)));
     },
     highlightEventDays() {
       return _.uniq(this.highlightEvents.map(evt => evt.substr(0, 10)));
     },
     loading() {
       return this.showLoadingSpinner || this.fakeLoading;
+    },
+    pickerDate() {
+      return formatPickerDate(this.pickerView);
     }
   },
   methods: {
@@ -124,36 +112,28 @@ export default {
     dateColors(date) {
       return this.highlightEventDays.includes(date) ? "secondary" : "primary";
     },
-    updateCalendar() {
-      // shows loader to visualize changes in datepicker
-      this.fakeLoading = true;
-      setTimeout(() => {
-        // refilter available slots from that date
-        this.selectEventDay(this.date);
-        this.fakeLoading = false;
-      }, 250);
+    emitFilter(filter) {
+      this.$emit("filter", filter);
     },
-    selectEventDay(eventDay) {
-      this.$emit(
-        "input",
-        this.filteredEvents.filter(evt => evt.substr(0, 10) === eventDay)
-      );
+    emitEventDay(day) {
+      this.$emit("input", utils.parseISOLocal(day));
     }
   },
-  watch: {
-    pickerDate: _.debounce(function(val) {
+  created() {
+    this.emitPickerView = _.debounce(val => {
       if (val.indexOf("-") == -1) return;
       this.$emit("update:pickerView", utils.parseISOLocal(val));
-    }, 500),
-    pickerView: function(val) {
-      this.date = null;
-      this.pickerDate = `${val.getFullYear()}-${(
-        "" +
-        (val.getMonth() + 1)
-      ).padStart(2, "0")}`;
-    }
+    }, 500);
   }
 };
+
+// returns format YYYY-MM
+function formatPickerDate(date) {
+  if (!date) return "";
+  return `${date.getFullYear()}-${(date.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}`;
+}
 </script>
 
 <style lang="stylus" scoped>

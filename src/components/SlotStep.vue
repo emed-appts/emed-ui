@@ -15,7 +15,8 @@
             :highlight-events="highlightEvents"
             :show-loading-spinner="loading"
             :picker-view.sync="pickerView"
-            @input="selectEvents"
+            @filter="filterSlots"
+            @input="updateSlots"
           />
         </v-flex>
         <v-flex xs12 md6>
@@ -56,6 +57,7 @@ import {
   SET_SLOTS,
   RESET
 } from "@/plugins/vuex/mutation-types";
+import utils from "@/utils";
 
 export default {
   components: {
@@ -65,6 +67,7 @@ export default {
   data: () => ({
     maxSelect: parseInt(process.env.VUE_APP_MAX_POSSIBLE_SLOTS),
     loading: false,
+    pickerFilter: "",
     pickerView: null,
     // selected slots
     slots: [],
@@ -100,9 +103,13 @@ export default {
       setSlots: SET_SLOTS,
       resetProcess: RESET
     }),
-    selectEvents(events) {
+    filterSlots(filter) {
+      this.pickerFilter = filter;
+      this.loadSlots(new APIFilter.Builder().withDaytime(filter).build());
+    },
+    updateSlots(day) {
       this.availableDailySlots = this.availableMonthlySlots.filter(slot =>
-        events.includes(slot.time.toISOString())
+        utils.equalDate(slot.time, day)
       );
     },
     selectSlots(slots) {
@@ -125,16 +132,26 @@ export default {
       this.$nextTick(this.goNextStep);
     },
     // loads slots from given date to end of month
-    loadSlots(fromDate) {
+    loadSlots(filter) {
       this.loading = true;
       return this.loadCalendar({
         calendar: this.calendar.id,
-        filter: generateAPIFilter(fromDate)
-      }).then(calendar => {
-        this.loading = false;
-        this.availableMonthlySlots = calendar.slots;
-        return calendar.slots;
-      });
+        filter: filter
+      })
+        .then(calendar => {
+          this.loading = false;
+          this.availableMonthlySlots = calendar.slots;
+          return calendar.slots;
+        })
+        .then(slots => {
+          if (
+            slots.length > 0 &&
+            slots[0].time.getMonth() !== this.pickerView.getMonth()
+          ) {
+            this.pickerView = new Date(slots[0].time.getTime());
+          }
+          return slots;
+        });
     }
   },
   watch: {
@@ -145,38 +162,63 @@ export default {
         return;
       }
 
-      this.loadSlots().then(slots => {
-        if (
-          slots.length > 0 &&
-          slots[0].time.getMonth() !== this.pickerView.getMonth()
-        ) {
-          this.pickerView = new Date(slots[0].time.getTime());
-        }
-      });
+      this.loadSlots();
     },
     pickerView: function(val) {
       if (!this.calendar) return;
-      this.loadSlots(_.max([new Date(), val]));
+
+      const from = _.max([new Date(), val]);
+      const to = new Date(from.getTime());
+      to.setHours(0, 0, 0, 0);
+      to.setDate(1);
+      to.setMonth(to.getMonth() + 1);
+
+      this.loadSlots(
+        new APIFilter.Builder()
+          .withFrom(from)
+          .withTo(to)
+          .withDaytime(this.pickerFilter)
+          .build()
+      );
     }
   }
 };
 
-function generateAPIFilter(fromDate) {
-  if (!fromDate) {
-    return {
-      maxCount: process.env.VUE_APP_API_SLOT_MAX_COUNT
-    };
+class APIFilter {
+  constructor(build) {
+    this.from = build.from;
+    this.to = build.to;
+    this.am = build.am;
+    this.pm = build.pm;
+    this.maxCount = build.maxCount;
   }
 
-  const maxDate = new Date(fromDate.getTime());
-  maxDate.setHours(0, 0, 0, 0);
-  maxDate.setDate(1);
-  maxDate.setMonth(maxDate.getMonth() + 1);
-
-  return {
-    from: fromDate,
-    to: maxDate,
-    maxCount: process.env.VUE_APP_API_SLOT_MAX_COUNT
-  };
+  static get Builder() {
+    class Builder {
+      constructor() {
+        this.maxCount = process.env.VUE_APP_API_SLOT_MAX_COUNT;
+      }
+      withFrom(from) {
+        this.from = from;
+        return this;
+      }
+      withTo(to) {
+        this.to = to;
+        return this;
+      }
+      // possible values: am, pm
+      withDaytime(daytime) {
+        // if we want to receive slots for particular daytime with set it to true
+        // a filter for pm means AM = false and vice versa
+        this.am = daytime !== "pm";
+        this.pm = daytime !== "am";
+        return this;
+      }
+      build() {
+        return new APIFilter(this);
+      }
+    }
+    return Builder;
+  }
 }
 </script>
