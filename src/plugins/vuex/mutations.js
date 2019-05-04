@@ -11,13 +11,15 @@ import {
   REMOVE_PATIENT,
   ENABLE_EDITMODE,
   DISABLE_EDITMODE,
-  RESET
+  RESET,
+  ENABLE_MAINTENANCEMODE
 } from "./mutation-types";
 import utils from "./utils";
 
 export default {
   [RESET](state) {
     state.processID = utils.generateID();
+    state.maintenanceMode = false;
     state.steps = [1];
     state.editMode = false;
     state.calendarInProcess = null;
@@ -27,6 +29,9 @@ export default {
     for (let patient in state.patients) {
       Vue.delete(state.patients, patient);
     }
+  },
+  [ENABLE_MAINTENANCEMODE](state) {
+    state.maintenanceMode = true;
   },
   [GO_STEP](state, step) {
     state.steps.push(step);

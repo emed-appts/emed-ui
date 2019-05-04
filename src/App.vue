@@ -47,13 +47,13 @@
         </v-stepper-header>
         <v-stepper-items>
           <v-stepper-content step="1">
-            <as-information-step />
+            <as-information-step :disabled="maintenanceMode" />
           </v-stepper-content>
           <v-stepper-content step="2">
-            <as-calendar-step :key="processID" />
+            <as-calendar-step :disabled="maintenanceMode" :key="processID" />
           </v-stepper-content>
           <v-stepper-content step="3">
-            <as-slot-step :key="processID" />
+            <as-slot-step :disabled="maintenanceMode" :key="processID" />
           </v-stepper-content>
           <v-stepper-content
             v-for="(slot, index) in slots"
@@ -64,11 +64,15 @@
             <as-patient-step
               v-if="currentStep >= 4 + index"
               :desired-slot="slot"
+              :disabled="maintenanceMode"
               :key="processID"
             />
           </v-stepper-content>
           <v-stepper-content :step="4 + slots.length">
-            <as-confirmation-step :key="processID" />
+            <as-confirmation-step
+              :disabled="maintenanceMode"
+              :key="processID"
+            />
           </v-stepper-content>
         </v-stepper-items>
       </v-stepper>
@@ -97,7 +101,8 @@ export default {
   computed: {
     ...mapState({
       calendar: state => state.calendarInProcess,
-      processID: state => state.processID
+      processID: state => state.processID,
+      maintenanceMode: state => state.maintenanceMode
     }),
     ...mapGetters(["currentStep", "slots"])
   }

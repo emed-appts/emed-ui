@@ -11,6 +11,7 @@ Vue.use(Vuex);
 
 const state = {
   processID: utils.generateID(),
+  maintenanceMode: false,
   steps: [1],
   editMode: false,
   calendarInProcess: null,

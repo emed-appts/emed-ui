@@ -89,16 +89,23 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <v-btn class="ml-0 mt-4" @click="goToPreviousStep">Zurück</v-btn>
+    <v-btn class="ml-0 mt-4" :disabled="disabled" @click="goToPreviousStep">
+      Zurück
+    </v-btn>
     <v-btn
       class="mt-4"
       color="primary"
-      :disabled="!valid"
+      :disabled="disabled || !valid"
       @click="completeReservation"
     >
       Verbindlich reservieren
     </v-btn>
-    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+    <v-btn
+      class="mr-0 mt-4 right"
+      color="error"
+      :disabled="disabled"
+      @click="resetProcess"
+    >
       Abbrechen
     </v-btn>
   </div>
@@ -118,6 +125,11 @@ import {
 export default {
   components: {
     AsDataPrivacyDialog
+  },
+  props: {
+    disabled: {
+      type: Boolean
+    }
   },
   data: () => ({
     valid: false,

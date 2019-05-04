@@ -28,8 +28,15 @@
         </v-list>
       </as-loading>
     </v-card>
-    <v-btn class="ml-0 mt-4" @click="goPreviousStep">Zurück</v-btn>
-    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+    <v-btn class="ml-0 mt-4" :disabled="disabled" @click="goPreviousStep">
+      Zurück
+    </v-btn>
+    <v-btn
+      class="mr-0 mt-4 right"
+      color="error"
+      :disabled="disabled"
+      @click="resetProcess"
+    >
       Abbrechen
     </v-btn>
   </div>
@@ -46,6 +53,11 @@ import {
 } from "@/plugins/vuex/mutation-types";
 
 export default {
+  props: {
+    disabled: {
+      type: Boolean
+    }
+  },
   data: () => ({
     loading: false
   }),

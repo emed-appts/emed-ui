@@ -28,16 +28,23 @@
         </v-flex>
       </v-layout>
     </v-container>
-    <v-btn class="ml-0 mt-4" @click="goToPreviousStep">Zurück</v-btn>
+    <v-btn class="ml-0 mt-4" :disabled="disabled" @click="goToPreviousStep">
+      Zurück
+    </v-btn>
     <v-btn
-      :disabled="slots.length === 0"
+      :disabled="disabled || slots.length === 0"
       class="mt-4"
       color="primary"
       @click="goToNextStep"
     >
       Weiter
     </v-btn>
-    <v-btn class="mr-0 mt-4 right" color="error" @click="resetProcess">
+    <v-btn
+      class="mr-0 mt-4 right"
+      color="error"
+      :disabled="disabled"
+      @click="resetProcess"
+    >
       Abbrechen
     </v-btn>
   </div>
@@ -63,6 +70,11 @@ export default {
   components: {
     AsDatePicker,
     AsSlotPicker
+  },
+  props: {
+    disabled: {
+      type: Boolean
+    }
   },
   data: () => ({
     maxSelect: parseInt(process.env.VUE_APP_MAX_POSSIBLE_SLOTS),

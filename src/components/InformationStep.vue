@@ -42,7 +42,14 @@
       Reservebrille besitzen. Rufen Sie in diesem Falle bitte an, wir werden uns
       um Ihr Problem kümmern.
     </p>
-    <v-btn class="ml-0 mt-2" color="primary" @click="goNextStep">Weiter</v-btn>
+    <v-btn
+      class="ml-0 mt-2"
+      color="primary"
+      :disabled="disabled"
+      @click="goNextStep"
+    >
+      Weiter
+    </v-btn>
   </div>
 </template>
 
@@ -51,6 +58,11 @@ import { mapMutations } from "vuex";
 import { GO_NEXT_STEP } from "../plugins/vuex/mutation-types";
 
 export default {
+  props: {
+    disabled: {
+      type: Boolean
+    }
+  },
   methods: mapMutations({
     goNextStep: GO_NEXT_STEP
   })
