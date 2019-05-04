@@ -65,9 +65,13 @@ export default {
       this.goNextStep();
     }
   },
-  mounted() {
+  async mounted() {
     this.loading = true;
-    this.loadCalendars().then(() => (this.loading = false));
+    try {
+      await this.loadCalendars();
+    } finally {
+      this.loading = false;
+    }
   }
 };
 </script>

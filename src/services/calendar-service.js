@@ -1,15 +1,20 @@
-import api from "./api";
+import APIClient from "./api";
 
-export default {
-  getAll() {
-    return api.get("/calendars");
+const CalendarService = {
+  async getAll() {
+    return await APIClient.get("/calendars");
   },
-  getCalendar(id, filter = {}) {
-    return api.get(`/calendars/${id}`, {
+  async getCalendar(id, filter = {}) {
+    return await APIClient.get(`/calendars/${id}`, {
       params: filter
     });
   },
-  createReservation(id, reservationData) {
-    return api.post(`/calendars/${id}/appointments`, reservationData);
+  async createReservation(id, reservationData) {
+    return await APIClient.post(
+      `/calendars/${id}/appointments`,
+      reservationData
+    );
   }
 };
+
+export default CalendarService;

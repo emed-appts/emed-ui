@@ -1,10 +1,14 @@
-import api from "./api";
+import APIClient from "./api";
 
-export default {
-  getAll(insuranceNumber) {
-    return api.get(`/appointments?insuranceNumber=${insuranceNumber}`);
+const AppointmentService = {
+  async getAll(insuranceNumber) {
+    return await APIClient.get("/appointments", {
+      params: { insuranceNumber }
+    });
   },
-  deleteAppointment(cancellationData) {
-    return api.post("/appointments", cancellationData);
+  async deleteAppointment(cancellationData) {
+    return await APIClient.post("/appointments", cancellationData);
   }
 };
+
+export default AppointmentService;

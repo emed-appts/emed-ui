@@ -47,7 +47,7 @@ const cache = setupCache({
   debug: process.env.NODE_ENV !== "production"
 });
 
-const api = axios.create({
+const apiClient = axios.create({
   adapter: cache.adapter,
   baseURL: process.env.VUE_APP_API_ROOT,
   withCredentials: false,
@@ -57,4 +57,4 @@ const api = axios.create({
   }
 });
 
-export default api;
+export default apiClient;

@@ -10,28 +10,26 @@ import {
 import { RECEIVE_CALENDARS } from "./mutation-types";
 
 export default {
-  [GET_ALL_CALENDARS]({ commit }) {
-    return CalendarService.getAll().then(response => {
-      const calendars = [];
-      for (let item of response.data.items) {
-        calendars.push(mapCalendar(item));
-      }
+  async [GET_ALL_CALENDARS]({ commit }) {
+    const response = await CalendarService.getAll();
+    let calendars = [];
+    for (let item of response.data.items) {
+      calendars.push(mapCalendar(item));
+    }
 
-      commit(RECEIVE_CALENDARS, calendars);
-      return calendars;
-    });
+    commit(RECEIVE_CALENDARS, calendars);
+    return calendars;
   },
-  [GET_CALENDAR](_, { calendar, filter }) {
-    return CalendarService.getCalendar(calendar, filter).then(response => {
-      return mapCalendar(response.data);
-    });
+  async [GET_CALENDAR](_, { calendar, filter }) {
+    const response = await CalendarService.getCalendar(calendar, filter);
+    return mapCalendar(response.data);
   },
-  [CREATE_APPOINTMENT](_, { slot }) {
-    return CalendarService.createReservation(slot);
+  async [CREATE_APPOINTMENT](_, { slot }) {
+    return await CalendarService.createReservation(slot);
   }
 };
 
-function mapCalendar(data) {
+const mapCalendar = data => {
   const calendar = new Calendar(
     data.id,
     data.title,
@@ -49,4 +47,4 @@ function mapCalendar(data) {
   calendar.slots = slots;
 
   return calendar;
-}
+};
