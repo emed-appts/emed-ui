@@ -1,6 +1,31 @@
 <template>
   <v-app>
     <v-content>
+      <v-slide-y-transition class="pb-2" group tag="div">
+        <v-alert
+          v-for="alert in alerts"
+          :key="alert.uuid"
+          :type="alert.type"
+          :value="true"
+          :dismissible="alert.type !== 'warning' && alert.type !== 'error'"
+          @input="removeAlert(alert)"
+        >
+          <v-layout align-center>
+            <v-flex>
+              {{ alert.message }}
+            </v-flex>
+            <v-btn
+              v-if="alert.type === 'warning' || alert.type === 'error'"
+              class="right"
+              color="secondary"
+              @click="resetProcess"
+            >
+              <v-icon :left="$vuetify.breakpoint.mdAndUp">mdi-reload</v-icon>
+              <span class="hidden-sm-and-down">Erneut versuchen</span>
+            </v-btn>
+          </v-layout>
+        </v-alert>
+      </v-slide-y-transition>
       <v-stepper :value="currentStep">
         <v-stepper-header>
           <v-stepper-step :complete="currentStep > 1" step="1">
@@ -81,7 +106,8 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
+import { ADD_ERROR, REMOVE_ALERT, RESET } from "@/plugins/vuex/mutation-types";
 
 import AsInformationStep from "./components/InformationStep";
 import AsCalendarStep from "./components/CalendarStep";
@@ -104,8 +130,13 @@ export default {
       processID: state => state.processID,
       maintenanceMode: state => state.maintenanceMode
     }),
-    ...mapGetters(["currentStep", "slots"])
-  }
+    ...mapGetters(["currentStep", "alerts", "slots"])
+  },
+  methods: mapMutations({
+    addError: ADD_ERROR,
+    removeAlert: REMOVE_ALERT,
+    resetProcess: RESET
+  })
 };
 </script>
 

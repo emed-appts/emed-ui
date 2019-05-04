@@ -47,6 +47,15 @@ const state = {
       slots // array of dates
     }
     */
+  },
+  alerts: {
+    /*
+    uuid: {
+      uuid,
+      type,
+      message
+    }
+    */
   }
 };
 

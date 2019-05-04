@@ -36,3 +36,13 @@ export const patients = state => {
   }
   return [];
 };
+
+// get alerts as array
+export const alerts = state => {
+  const ids = Object.keys(state.alerts);
+  // map to array
+  if (ids.length > 0) {
+    return ids.map(id => state.alerts[id]);
+  }
+  return [];
+};

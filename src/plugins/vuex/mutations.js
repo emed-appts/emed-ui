@@ -12,6 +12,9 @@ import {
   ENABLE_EDITMODE,
   DISABLE_EDITMODE,
   RESET,
+  ADD_WARNING,
+  ADD_ERROR,
+  REMOVE_ALERT,
   ENABLE_MAINTENANCEMODE
 } from "./mutation-types";
 import utils from "./utils";
@@ -28,6 +31,9 @@ export default {
     }
     for (let patient in state.patients) {
       Vue.delete(state.patients, patient);
+    }
+    for (let uuid in state.alerts) {
+      Vue.delete(state.alerts, uuid);
     }
   },
   [ENABLE_MAINTENANCEMODE](state) {
@@ -87,9 +93,24 @@ export default {
   },
   [DISABLE_EDITMODE](state) {
     state.editMode = false;
+  },
+  [ADD_WARNING](state, { message }) {
+    addAlert(state, { type: "warning", message });
+  },
+  [ADD_ERROR](state, { message }) {
+    addAlert(state, { type: "error", message });
+  },
+  [REMOVE_ALERT](state, { uuid }) {
+    Vue.delete(state.alerts, uuid);
   }
 };
 
-function removePatient(state, patient) {
+const addAlert = (state, alert) => {
+  const uuid = utils.generateID();
+  alert.uuid = uuid;
+  Vue.set(state.alerts, uuid, alert);
+};
+
+const removePatient = (state, patient) => {
   Vue.delete(state.patients, patient.insuranceNumber);
-}
+};
