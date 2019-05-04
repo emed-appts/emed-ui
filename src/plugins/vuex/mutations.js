@@ -26,11 +26,11 @@ export default {
     state.steps = [1];
     state.editMode = false;
     state.calendarInProcess = null;
-    for (let slot in state.slots) {
-      Vue.delete(state.slots, slot);
+    for (let id in state.slots) {
+      Vue.delete(state.slots, id);
     }
-    for (let patient in state.patients) {
-      Vue.delete(state.patients, patient);
+    for (let insuranceNumber in state.patients) {
+      Vue.delete(state.patients, insuranceNumber);
     }
     for (let uuid in state.alerts) {
       Vue.delete(state.alerts, uuid);
