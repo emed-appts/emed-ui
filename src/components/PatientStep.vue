@@ -24,7 +24,7 @@
                   <v-text-field
                     ref="focus"
                     v-model="patient.firstName"
-                    :rules="firstNameRules"
+                    :rules="rules.firstName"
                     label="Vorname"
                     autofocus
                     required
@@ -34,7 +34,7 @@
                 <v-flex class="py-1">
                   <v-text-field
                     v-model="patient.lastName"
-                    :rules="lastNameRules"
+                    :rules="rules.lastName"
                     label="Nachname"
                     required
                     validate-on-blur
@@ -43,7 +43,7 @@
                 <v-flex class="py-1">
                   <v-text-field
                     v-model="patient.insuranceNumber"
-                    :rules="insuranceNumberRules"
+                    :rules="rules.insuranceNumber"
                     label="SVNr"
                     placeholder="0000 DDMMYYYY"
                     hint="10-stellige SVNr"
@@ -65,33 +65,31 @@
                     full-width
                   >
                     <v-text-field
+                      ref="birthday"
                       slot="activator"
                       v-model="birthday"
-                      :rules="birthdayRules"
+                      :rules="rules.birthday"
                       :readonly="$vuetify.breakpoint.smAndDown"
                       label="Geburtsdatum"
                       placeholder="DD.MM.YYYY"
-                      append-icon="event"
+                      append-icon="mdi-calendar"
                       required
                       validate-on-blur
-                      @blur="patient.birthday = parseDate(birthday)"
+                      @blur="updateBirthday"
                     />
                     <v-date-picker
+                      ref="picker"
                       v-model="patient.birthday"
                       :max="new Date().toISOString().substr(0, 10)"
                       locale="de-de"
-                      @input="
-                        birthday = formatDate($event);
-                        $refs.menu.save($event);
-                      "
-                      no-title
+                      @input="updateBirthdayField"
                     />
                   </v-menu>
                 </v-flex>
                 <v-flex class="py-1">
                   <v-text-field
                     v-model="patient.phoneNumber"
-                    :rules="phoneNumberRules"
+                    :rules="rules.phoneNumber"
                     label="Telefonnummer"
                     required
                     validate-on-blur
@@ -100,7 +98,7 @@
                 <v-flex class="py-1">
                   <v-text-field
                     v-model="patient.email"
-                    :rules="emailRules"
+                    :rules="rules.email"
                     label="Email"
                     required
                     validate-on-blur
@@ -175,45 +173,47 @@ export default {
       menu: false,
       // temporary variable for datepicker
       birthday: null,
-      firstNameRules: [
-        v => !!v || "Vorname ist ein Pflichtfeld",
-        v =>
-          /^[a-zA-ZäöüÄÖÜß]+(\s[a-zA-ZäöüÄÖÜß]+)?$/.test(v) ||
-          "Vorname darf nur Buchstaben enthalten. Leerzeichen zwischen Namen sind erlaubt."
-      ],
-      lastNameRules: [
-        v => !!v || "Nachname ist ein Pflichtfeld",
-        v =>
-          /^[a-zA-ZäöüÄÖÜß]+$/.test(v) ||
-          "Nachname darf nur Buchstaben enthalten"
-      ],
-      insuranceNumberRules: [
-        v => !!v || "SVNr ist ein Pflichtfeld",
-        v => (v && v.length === 10) || "SVNr muss 10-stellig sein",
-        v => /^\d{10}$/.test(v) || "SVNr darf nur aus Ziffern bestehen",
-        v => SSNValidator.validate(v) || "SVNr ist nicht gültig",
-        v =>
-          this.patients.findIndex(pat => pat.insuranceNumber === v) === -1 ||
-          "SVNr wird bereits verwendet"
-      ],
-      birthdayRules: [
-        v => !!v || "Geburtstag ist ein Pflichtfeld",
-        v =>
-          /^\d{1,2}\.\d{1,2}\.\d{4}$/.test(v) || "Geburtstag ist nicht gültig"
-      ],
-      emailRules: [
-        v => !!v || "E-Mail ist ein Pflichtfeld",
-        v =>
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-            v
-          ) || "E-Mail ist nicht gültig"
-      ],
-      phoneNumberRules: [
-        v => !!v || "Telefon ist ein Pflichtfeld",
-        v =>
-          (v && Object.keys(parsePhone(v, "AT")).length != 0) ||
-          "Telefon ist nicht gültig"
-      ]
+      rules: {
+        firstName: [
+          v => !!v || "Vorname ist ein Pflichtfeld",
+          v =>
+            /^[a-zA-ZäöüÄÖÜß]+(\s[a-zA-ZäöüÄÖÜß]+)?$/.test(v) ||
+            "Vorname darf nur Buchstaben enthalten. Leerzeichen zwischen Namen sind erlaubt."
+        ],
+        lastName: [
+          v => !!v || "Nachname ist ein Pflichtfeld",
+          v =>
+            /^[a-zA-ZäöüÄÖÜß]+$/.test(v) ||
+            "Nachname darf nur Buchstaben enthalten"
+        ],
+        insuranceNumberRules: [
+          v => !!v || "SVNr ist ein Pflichtfeld",
+          v => (v && v.length === 10) || "SVNr muss 10-stellig sein",
+          v => /^\d{10}$/.test(v) || "SVNr darf nur aus Ziffern bestehen",
+          v => SSNValidator.validate(v) || "SVNr ist nicht gültig",
+          v =>
+            this.patients.findIndex(pat => pat.insuranceNumber === v) === -1 ||
+            "SVNr wird bereits verwendet"
+        ],
+        birthday: [
+          v => !!v || "Geburtstag ist ein Pflichtfeld",
+          v =>
+            /^\d{1,2}\.\d{1,2}\.\d{4}$/.test(v) || "Geburtstag ist nicht gültig"
+        ],
+        phoneNumber: [
+          v => !!v || "Telefon ist ein Pflichtfeld",
+          v =>
+            (v && Object.keys(parsePhone(v, "AT")).length != 0) ||
+            "Telefon ist nicht gültig"
+        ],
+        email: [
+          v => !!v || "E-Mail ist ein Pflichtfeld",
+          v =>
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+              v
+            ) || "E-Mail ist nicht gültig"
+        ]
+      }
     };
   },
   computed: {
@@ -231,11 +231,8 @@ export default {
       addPatient: ADD_PATIENT,
       resetProcess: RESET
     }),
-    formatDate(date) {
-      if (!date) return null;
-
-      const [year, month, day] = date.split("-");
-      return `${day}.${month}.${year}`;
+    updateBirthday(date) {
+      this.patient.birthday = this.parseDate(date);
     },
     parseDate(date) {
       if (!date) return null;
@@ -244,6 +241,17 @@ export default {
       if (!day || !month || !year) return;
 
       return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    },
+    updateBirthdayField(date) {
+      this.birthday = this.formatDate(date);
+      this.$refs.menu.save(this.birthday);
+      this.$refs.birthday.validate(true, this.birthday);
+    },
+    formatDate(date) {
+      if (!date) return null;
+
+      const [year, month, day] = date.split("-");
+      return `${day}.${month}.${year}`;
     },
     goToPreviousStep() {
       // reset data on going back
@@ -262,6 +270,12 @@ export default {
       } else {
         this.goNextStep();
       }
+    }
+  },
+  watch: {
+    menu(val) {
+      val &&
+        requestAnimationFrame(() => (this.$refs.picker.activePicker = "YEAR"));
     }
   },
   mounted() {
