@@ -5,7 +5,11 @@
       <as-loading :show="loading">
         <v-list three-line v-if="calendars.length">
           <template v-for="(calendar, index) in calendars">
-            <v-list-tile :key="index" ripple @click="selectCalendar(calendar)">
+            <v-list-tile
+              :key="index"
+              :ripple="{ class: 'accent--text' }"
+              @click="selectCalendar(calendar)"
+            >
               <v-list-tile-content>
                 <v-list-tile-title>
                   {{ calendar.title }}&nbsp;
